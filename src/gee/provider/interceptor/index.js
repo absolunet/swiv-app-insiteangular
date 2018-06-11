@@ -10,22 +10,25 @@ module.exports = (ngModule) => {
 
     class Interceptor {
 
-        constructor(actions) {
+        constructor(actions, geeService) {
             _interceptor = this;
             this.actions = actions;
+            this.geeService = geeService;
         }
 
         response(res) {
-            let url = res.config.url.replace(window.location.hostname, '');
-            url = url.split('?')[0];
-            url = `${url.charAt(0) === '/' || /http(s)?:/.test(url) ? '' : '/'}${url}`.replace(/\.json$/, '');
+            if (res.config.gee !== false) {
+                let url = res.config.url.replace(window.location.hostname, '');
+                url = url.split('?')[0];
+                url = `${url.charAt(0) === '/' || /http(s)?:/.test(url) ? '' : '/'}${url}`.replace(/\.json$/, '');
 
-            for (const endpoint in _interceptor.actions) {
-                if (_interceptor.actions[endpoint] && _interceptor.actions[endpoint].length) {
-                    if ((new RegExp(`^${_endpointPrefix}${endpoint}(/)?$`)).test(url)) {
-                        _interceptor.actions[endpoint].forEach((action) => {
-                            window.swiv.gee.getService().trigger(action, res.data);
-                        });
+                for (const endpoint in _interceptor.actions) {
+                    if (_interceptor.actions[endpoint] && _interceptor.actions[endpoint].length) {
+                        if ((new RegExp(`^${_endpointPrefix}${endpoint}(/)?$`)).test(url)) {
+                            _interceptor.actions[endpoint].forEach((action) => {
+                                _interceptor.geeService.trigger(action, res.data);
+                            });
+                        }
                     }
                 }
             }
@@ -35,7 +38,7 @@ module.exports = (ngModule) => {
     }
 
 
-    const InterceptorFactory = () => {
+    const InterceptorFactory = (geeService) => {
         const _processedEndpointActionCollection = {};
 
         for(const endpoint in _endpointAliasCollection) {
@@ -54,10 +57,10 @@ module.exports = (ngModule) => {
             }
         }
 
-        return new Interceptor(_processedEndpointActionCollection);
+        return new Interceptor(_processedEndpointActionCollection, geeService);
     }
 
-    InterceptorFactory.$inject = [];
+    InterceptorFactory.$inject = [require('./../gee/name')];
 
 
     class InterceptorProvider {

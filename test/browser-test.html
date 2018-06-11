@@ -37,7 +37,7 @@
 	<!-- End Google Tag Manager (noscript) -->
 
 	<div ng-controller="testCtrl as vm">
-		<div ng-repeat="product in vm.products" ng-click="vm.impressProduct(product)">
+		<div ng-repeat="product in vm.products" ng-click="vm.impressProduct(product)" swiv-gee-product="product">
 			This is a product: {{ product.id }}
 		</div>
 	</div>
