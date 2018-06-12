@@ -383,7 +383,7 @@ module.exports = function (ngModule) {
             },
             link: function link($scope, $element) {
                 $element.on('click', function () {
-                    geeService.trigger('productClick', $scope.product);
+                    geeService.triggerProductClick($scope.product);
                 });
             }
         };

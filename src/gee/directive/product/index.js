@@ -15,7 +15,7 @@ module.exports = (ngModule) => {
                 },
                 link: ($scope, $element) => {
                     $element.on('click', () => {
-                        geeService.trigger('productClick', $scope.product);
+                        geeService.triggerProductClick($scope.product);
                     });
                 }
             };
