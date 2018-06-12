@@ -1,5 +1,5 @@
 # Google Enhanced Ecommerce
-[_Swiv App modules - Insite w/ AngularJS_](../../) > [_Wiki_](../)
+[_Swiv App modules - Insite w/ AngularJS_](../../readme.md) > [_Wiki_](../)
 
 **This module handles all the Google Enhanced Ecommerce event trigger within the Insite default Responsive theme, built in AngularJS.**
 

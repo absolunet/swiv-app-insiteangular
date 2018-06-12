@@ -1,5 +1,5 @@
 # Wiki
-[_Swiv App modules - Insite w/ AngularJS_](..)
+[_Swiv App modules - Insite w/ AngularJS_](../readme.md)
 
 - [Google Enhanced Ecommerce](gee)
     - [Providers & configuration](gee/providers)
