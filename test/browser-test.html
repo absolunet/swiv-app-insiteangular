@@ -9,10 +9,28 @@
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120234723-1"></script>
 	<script>
 	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-
-	gtag('config', 'UA-120234723-1');
+	
+	dataLayer.push({
+		'event': 'productClick',
+		'ecommerce': {
+			'click': {
+				'actionField': {
+					'list': 'Search Results'
+				},
+				'products': [{
+					'name': 'A product',
+					'id': '1234567890',
+					'price': 12.34,
+					'brand': 'Brand',
+					'category': 'Category',
+					'variant': 'black',
+					'position': 1
+				}]
+			}
+		},
+		'eventCallback': function(a, b, c) {
+		}
+	});
 	</script>
 
 	<!-- Google Tag Manager -->
@@ -37,7 +55,13 @@
 	<!-- End Google Tag Manager (noscript) -->
 
 	<div ng-controller="testCtrl as vm">
-		<div ng-repeat="product in vm.products" ng-click="vm.impressProduct(product)" swiv-gee-product="product">
+		<div ng-repeat="product in vm.products" ng-click="vm.impressProduct(product)" swiv-gee-product="product" style="
+			border: 1px solid black;
+			padding: 1em;
+			cursor: pointer;
+			margin: 0 1em 1em 0;
+			float: left;
+			width: 25em;">
 			This is a product: {{ product.id }}
 		</div>
 	</div>
