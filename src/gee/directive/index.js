@@ -1,3 +1,3 @@
 module.exports = (ngModule) => {
-    require('./product')(ngModule);
+	require('./product')(ngModule);
 };

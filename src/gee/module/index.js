@@ -1,1 +1,1 @@
-module.exports = angular.module(require('./name'), require('./dependencies'));
+module.exports = window.angular ? window.angular.module(require('./name'), require('./dependencies')) : null;

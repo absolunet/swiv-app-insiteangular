@@ -1,3 +1,3 @@
 module.exports = [
-    require('./gee').name
+	require('./gee').name
 ];
