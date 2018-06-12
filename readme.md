@@ -1,7 +1,5 @@
 # Swiv App modules - Insite w/ AngularJS
-Here are all the modules for [Swiv](https://github.com/absolunet/swiv) in [Insite software](https://www.insitesoft.com/)'s implementation of AngularJS in the Responsive theme.
-
-- [Google Enhanced Ecommerce](src/gee);
+Here are all the modules for [Swiv](https://github.com/absolunet/swiv) in [Insite software](https://www.insitesoft.com/)'s implementation of AngularJS in the Responsive theme ([see the full wiki here](wiki)).
 
 
 ## Getting started
@@ -41,24 +39,4 @@ module insite {
 
 It is a plug-and-play plugin, so nothing else to do to keed the vanilla flavour!
 
-However, there are some services and directives that you can use in addition to this custom behaviour.
-
-
-## Provider & configuration
-
-TBD
-
-
-## Pipes
-
-TBD
-
-
-## Directives
-
-TBD
-
-
-## Events
-
-TBD
+However, there are some services and directives that you can use in addition to this custom behaviour ([see the wiki](wiki)).
