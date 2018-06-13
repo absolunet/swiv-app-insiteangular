@@ -3,7 +3,7 @@ const { guidRegExp } = require('./../../helpers');
 
 const _endpointAlias = {
 	'/products': 'productImpression',
-	[`/products/${guidRegExp}`]: 'productImpression'
+	[`/products/${guidRegExp}`]: 'productDetail'
 };
 
 module.exports = (ngModule) => {
