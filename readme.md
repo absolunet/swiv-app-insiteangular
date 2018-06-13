@@ -37,6 +37,6 @@ module insite {
 
 ```
 
-It is a plug-and-play plugin, so nothing else to do to keed the vanilla flavour!
+It is a plug-and-play plugin, so nothing else to do to keep the vanilla flavour!
 
 However, there are some services and directives that you can use in addition to this custom behaviour ([see the wiki](wiki)).
