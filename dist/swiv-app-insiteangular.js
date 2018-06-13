@@ -412,8 +412,8 @@ var _require = __webpack_require__(1),
     guidRegExp = _require.guidRegExp;
 
 var _endpointAlias = _defineProperty({
-	'/products': 'impression'
-}, '/products/' + guidRegExp, 'impression');
+	'/products': 'productImpression'
+}, '/products/' + guidRegExp, 'productImpression');
 
 module.exports = function (ngModule) {
 	ngModule.config([interceptor + 'Provider', function ($interceptorProvider) {

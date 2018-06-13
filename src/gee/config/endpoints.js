@@ -2,8 +2,8 @@ const interceptor = require('./../provider/interceptor/name');
 const { guidRegExp } = require('./../../helpers');
 
 const _endpointAlias = {
-	'/products': 'impression',
-	[`/products/${guidRegExp}`]: 'impression'
+	'/products': 'productImpression',
+	[`/products/${guidRegExp}`]: 'productImpression'
 };
 
 module.exports = (ngModule) => {

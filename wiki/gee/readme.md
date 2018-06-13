@@ -17,10 +17,10 @@ angular.module("insite")
         "$http",
         function($http) {
 
-            // Will trigger "impressions" event with a product collection as default data
+            // Will trigger "productImpression" event with a product collection as default data
             $http.get("/api/v1/products");
 
-            // Will trigger "impressions" event with a single product as default data
+            // Will trigger "productImpression" event with a single product as default data
             $http.get("/api/v1/products/7554706d-9600-4c9e-b851-ae14276fd600");
 
             // Will not trigger Google Enhanced Ecommerce pipeline
