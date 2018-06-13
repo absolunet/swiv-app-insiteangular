@@ -1,5 +1,5 @@
 # Swiv App modules - Insite w/ AngularJS
-Here are all the modules for [Swiv](https://github.com/absolunet/swiv) in [Insite software](https://www.insitesoft.com/)'s implementation of AngularJS in the Responsive theme ([see the full wiki here](wiki)).
+Here are all the modules for [Swiv](https://github.com/absolunet/swiv) in <a href="https://www.insitesoft.com/" target="_blank">Insite software</a>'s implementation of AngularJS in the Responsive theme ([see the full wiki here](wiki)).
 
 
 ## Getting started
