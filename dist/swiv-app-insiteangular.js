@@ -114,7 +114,7 @@ module.exports = __webpack_require__(5);
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(6);
+module.exports = __webpack_require__(6);
 
 /***/ }),
 /* 6 */
@@ -235,17 +235,17 @@ module.exports = function (ngModule) {
 		_createClass(Interceptor, [{
 			key: 'response',
 			value: function response(res) {
+				var url = res.config.url.replace(window.location.hostname, '');
+
+				var _url$split = url.split('?');
+
+				var _url$split2 = _slicedToArray(_url$split, 1);
+
+				url = _url$split2[0];
+
+				url = ('' + (url.charAt(0) === '/' || /http(s)?:/.test(url) ? '' : '/') + url).replace(/\.json$/, '');
+
 				if (res.config.gee !== false) {
-					var url = res.config.url.replace(window.location.hostname, '');
-
-					var _url$split = url.split('?');
-
-					var _url$split2 = _slicedToArray(_url$split, 1);
-
-					url = _url$split2[0];
-
-					url = ('' + (url.charAt(0) === '/' || /http(s)?:/.test(url) ? '' : '/') + url).replace(/\.json$/, '');
-
 					var triggerFn = function triggerFn(action) {
 						self.geeService.trigger(action, res.data);
 					};
@@ -259,7 +259,16 @@ module.exports = function (ngModule) {
 					}
 				}
 
+				if (new RegExp('^' + _endpointPrefix + '/sessions/current(/)?$').test(url)) {
+					self.setCurrencyCode(res.data.currency.currencyCode);
+				}
+
 				return res;
+			}
+		}, {
+			key: 'setCurrencyCode',
+			value: function setCurrencyCode(currencyCode) {
+				this.geeService.configs.set('currencyCode', currencyCode);
 			}
 		}]);
 

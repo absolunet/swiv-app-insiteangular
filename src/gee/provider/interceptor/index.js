@@ -17,11 +17,11 @@ module.exports = (ngModule) => {
 		}
 
 		response(res) {
-			if (res.config.gee !== false) {
-				let url = res.config.url.replace(window.location.hostname, '');
-				[url] = url.split('?');
-				url = `${url.charAt(0) === '/' || (/http(s)?:/).test(url) ? '' : '/'}${url}`.replace(/\.json$/, '');
+			let url = res.config.url.replace(window.location.hostname, '');
+			[url] = url.split('?');
+			url = `${url.charAt(0) === '/' || (/http(s)?:/).test(url) ? '' : '/'}${url}`.replace(/\.json$/, '');
 
+			if (res.config.gee !== false) {
 				const triggerFn = (action) => {
 					self.geeService.trigger(action, res.data);
 				};
@@ -35,7 +35,15 @@ module.exports = (ngModule) => {
 				}
 			}
 
+			if ((new RegExp(`^${_endpointPrefix}/sessions/current(/)?$`)).test(url)) {
+				self.setCurrencyCode(res.data.currency.currencyCode);
+			}
+
 			return res;
+		}
+
+		setCurrencyCode(currencyCode) {
+			this.geeService.configs.set('currencyCode', currencyCode);
 		}
 
 	}
