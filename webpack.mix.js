@@ -6,16 +6,14 @@ require('laravel-mix-eslint');
 
 const distFolderName = 'dist';
 const distFileName = `${__dirname.split(path.sep).pop()}${mix.inProduction() ? '.min' : ''}.js`;
-const coreName = 'swiv-core';
-const mapperName = 'swiv-map-insite';
 
 mix.setPublicPath(distFolderName)
     .webpackConfig({
         resolve: {
-            alias: {
-                [coreName]: path.resolve(__dirname, '..', coreName),
-                [mapperName]: path.resolve(__dirname, '..', mapperName)
-            }
+            modules: [
+                'node_modules',
+                'bower_components'
+            ]
         }
     })
     .eslint()
