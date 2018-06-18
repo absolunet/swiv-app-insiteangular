@@ -1,21 +1,23 @@
-const prefix = require('./../name');
+const directiveName = require('./name');
+const positionDirective = require('./../position/name').replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
 module.exports = (ngModule) => {
 
-	const name = `${prefix}Product`;
-
-	ngModule.directive(name, [
+	ngModule.directive(directiveName, [
 		require('./../../provider/gee/name'),
 		(geeService) => {
 			return {
 				restrict: 'AC',
-				replace: false,
 				scope: {
-					product: `=${name}`
+					product: `=${directiveName}`
 				},
 				link: ($scope, $element) => {
 					$element.on('click', () => {
-						geeService.triggerProductClick($scope.product);
+						const position = $element.attr(positionDirective) || $element.closest(`[${positionDirective}]`).attr(positionDirective);
+						const product = window.angular.copy($scope.product);
+						product.properties = product.properties || {};
+						product.properties.position = position;
+						geeService.triggerProductClick(product);
 					});
 				}
 			};

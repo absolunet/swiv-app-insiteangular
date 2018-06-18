@@ -6,8 +6,6 @@ module.exports = (ngModule) => {
 
 	const _endpointActionCollection = {};
 
-	const _endpointAliasCollection = {};
-
 	class Interceptor {
 
 		constructor(actions, geeService) {
@@ -22,8 +20,16 @@ module.exports = (ngModule) => {
 			url = `${url.charAt(0) === '/' || (/http(s)?:/).test(url) ? '' : '/'}${url}`.replace(/\.json$/, '');
 
 			if (res.config.gee !== false) {
-				const triggerFn = (action) => {
-					self.geeService.trigger(action, res.data);
+				const triggerFn = ({ event, preprocess, process }) => {
+					if (typeof preprocess === 'function') {
+						preprocess(res.data);
+					}
+
+					if (typeof process === 'function') {
+						process(res.data, self.geeService);
+					} else {
+						self.geeService.trigger(event, res.data);
+					}
 				};
 
 				for (const endpoint in self.actions) {
@@ -35,40 +41,14 @@ module.exports = (ngModule) => {
 				}
 			}
 
-			if ((new RegExp(`^${_endpointPrefix}/sessions/current(/)?$`)).test(url)) {
-				self.setCurrencyCode(res.data.currency.currencyCode);
-			}
-
 			return res;
-		}
-
-		setCurrencyCode(currencyCode) {
-			this.geeService.configs.set('currencyCode', currencyCode);
 		}
 
 	}
 
 
 	const InterceptorFactory = (geeService) => {
-		const _processedEndpointActionCollection = {};
-
-		for (const endpoint in _endpointAliasCollection) {
-			if (_endpointAliasCollection[endpoint]) {
-				let actions = [];
-				const aliases = _endpointAliasCollection[endpoint] || [];
-				aliases.push(endpoint);
-
-				aliases.forEach((alias) => {
-					actions = actions.concat(_endpointActionCollection[alias] || []);
-				});
-
-				_processedEndpointActionCollection[endpoint] = actions.filter((value, index, obj) => {
-					return obj.indexOf(value) === index;
-				});
-			}
-		}
-
-		return new Interceptor(_processedEndpointActionCollection, geeService);
+		return new Interceptor(_endpointActionCollection, geeService);
 	};
 
 	InterceptorFactory.$inject = [require('./../gee/name')];
@@ -77,6 +57,18 @@ module.exports = (ngModule) => {
 	class InterceptorProvider {
 
 		addAction(endpoint, action) {
+			const defaultAction = {
+				event: '',
+				mainDataName: null,
+				getMainData: (data) => {
+					return data;
+				}
+			};
+
+			Object.keys(defaultAction).forEach((key) => {
+				action[key] = action[key] || defaultAction[key];
+			});
+
 			return this.safePush(_endpointActionCollection, endpoint, action);
 		}
 
@@ -86,10 +78,6 @@ module.exports = (ngModule) => {
 
 		get endpointPrefix() {
 			return _endpointPrefix;
-		}
-
-		addEndpointAlias(endpoint, alias) {
-			return this.safePush(_endpointAliasCollection, endpoint, alias);
 		}
 
 		safePush(arr, key, value) {
