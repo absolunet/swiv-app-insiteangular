@@ -1,0 +1,28 @@
+{
+  "name": "swiv-app-insiteangular",
+  "description": "Swiv implementation on Insite Software built on top of AngularJS",
+  "main": "index.js",
+  "authors": [
+    "Thierry Parent",
+    "Absolunet"
+  ],
+  "dependencies": {
+    "swiv-core": "latest"
+  },
+  "license": "MIT",
+  "keywords": [
+    "swiv",
+    "angularjs",
+    "insite",
+    "isc",
+    "absolunet"
+  ],
+  "homepage": "https://github.com/absolunet/swiv-app-insiteangular",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
