@@ -4,7 +4,7 @@ module.exports = {
 	preprocess: (response) => {
 		const products = [];
 
-		response.wishListCollection.forEach((wishList) => {
+		(response.wishListCollection || []).forEach((wishList) => {
 			(wishList.wishListLineCollection || []).forEach((wishListLine) => {
 				products.push(wishListLine);
 			});

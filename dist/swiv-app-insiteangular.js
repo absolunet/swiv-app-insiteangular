@@ -488,7 +488,7 @@ module.exports = {
 	preprocess: function preprocess(response) {
 		var products = [];
 
-		response.wishListCollection.forEach(function (wishList) {
+		(response.wishListCollection || []).forEach(function (wishList) {
 			(wishList.wishListLineCollection || []).forEach(function (wishListLine) {
 				products.push(wishListLine);
 			});
@@ -520,7 +520,9 @@ module.exports = {
 module.exports = {
 	endpoint: '/sessions/current',
 	process: function process(data, geeService) {
-		geeService.configs.set('currencyCode', data.currency.currencyCode);
+		if (data && data.currency && data.currency.currencyCode) {
+			geeService.configs.set('currencyCode', data.currency.currencyCode);
+		}
 	}
 };
 
