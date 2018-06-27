@@ -5,7 +5,13 @@ const configs = {
 
 		return `${configs.prefix}${_name.charAt(0).toUpperCase()}${_name.slice(1)}`;
 	},
-	guidRegExp: '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
+	guidRegExp: '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}',
+	methods: {
+		'get': 'GET',
+		'post': 'POST',
+		'patch': 'PATCH',
+		'delete': 'DELETE'
+	}
 };
 
 module.exports = configs;

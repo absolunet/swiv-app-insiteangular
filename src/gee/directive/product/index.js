@@ -7,7 +7,7 @@ module.exports = (ngModule) => {
 		require('./../../provider/gee/name'),
 		(geeService) => {
 			return {
-				restrict: 'AC',
+				restrict: 'A',
 				scope: {
 					product: `=${directiveName}`
 				},

@@ -6,7 +6,8 @@ const _actions = [
 	require('./endpoint/cross-sells'),
 	require('./endpoint/get-wishlists'),
 	require('./endpoint/get-wishlist'),
-	require('./endpoint/current-session')
+	require('./endpoint/current-session'),
+	require('./endpoint/add-to-cart')
 ];
 
 module.exports = (ngModule) => {
