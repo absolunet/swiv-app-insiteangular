@@ -1,99 +1,110 @@
-module.exports = (ngModule) => {
+const { url:urlHelper } = require('./../../../helpers');
+let _endpointPrefix = '';
+let _self; // eslint-disable-line consistent-this
+const _endpointActionCollection = {};
 
-	let _endpointPrefix = '';
+class Interceptor {
 
-	let self;
-
-	const _endpointActionCollection = {};
-
-	class Interceptor {
-
-		constructor(actions, geeService) {
-			self = this;
-			this.actions = actions;
-			this.geeService = geeService;
-		}
-
-		response(res) {
-			let url = res.config.url.replace(window.location.hostname, '');
-			[url] = url.split('?');
-			url = `${url.charAt(0) === '/' || (/http(s)?:/).test(url) ? '' : '/'}${url}`.replace(/\.json$/, '');
-
-			if (res.config.gee !== false) {
-				const triggerFn = ({ event, preprocess, process }) => {
-					if (typeof preprocess === 'function') {
-						preprocess(res.data);
-					}
-
-					if (typeof process === 'function') {
-						process(res.data, self.geeService);
-					} else {
-						self.geeService.trigger(event, res.data);
-					}
-				};
-
-				for (const endpoint in self.actions) {
-					if (self.actions[endpoint] && self.actions[endpoint].length) {
-						if ((new RegExp(`^${_endpointPrefix}${endpoint}(/)?$`)).test(url)) {
-							self.actions[endpoint].forEach(triggerFn);
-						}
-					}
-				}
-			}
-
-			return res;
-		}
-
+	constructor(actions, geeService) {
+		_self = this;
+		this.actions = actions;
+		this.geeService = geeService;
 	}
 
+	response(res) {
+		if (res.config.gee !== false) {
+			const url = urlHelper.getUri(res.config.url);
 
-	const InterceptorFactory = (geeService) => {
-		return new Interceptor(_endpointActionCollection, geeService);
-	};
+			const triggerFn = ({ event, preprocess, process }) => {
+				if (typeof preprocess === 'function') {
+					preprocess(res.data);
+				}
 
-	InterceptorFactory.$inject = [require('./../gee/name')];
-
-
-	class InterceptorProvider {
-
-		addAction(endpoint, action) {
-			const defaultAction = {
-				event: '',
-				mainDataName: null,
-				getMainData: (data) => {
-					return data;
+				if (typeof process === 'function') {
+					process(res.data, _self.geeService);
+				} else {
+					_self.geeService.trigger(event, res.data);
 				}
 			};
 
-			Object.keys(defaultAction).forEach((key) => {
-				action[key] = action[key] || defaultAction[key];
-			});
-
-			return this.safePush(_endpointActionCollection, endpoint, action);
+			for (const endpoint in _self.actions) {
+				if (_self.actions[endpoint] && _self.actions[endpoint].length) {
+					if ((new RegExp(`^${_endpointPrefix}${endpoint}(/)?$`)).test(url)) {
+						_self.actions[endpoint].forEach((action) => {
+							if (urlHelper.isMethod(res.config.method, action.methods || action.method)) {
+								triggerFn(action);
+							}
+						});
+					}
+				}
+			}
 		}
 
-		set endpointPrefix(value) {
-			_endpointPrefix = value;
-		}
-
-		get endpointPrefix() {
-			return _endpointPrefix;
-		}
-
-		safePush(arr, key, value) {
-			arr[key] = arr[key] || [];
-			arr[key].push(value);
-
-			return this;
-		}
-
-		get $get() {
-			return InterceptorFactory;
-		}
-
+		return res;
 	}
 
-	InterceptorProvider.$inject = [];
+}
 
+const InterceptorFactory = (geeService) => {
+	return new Interceptor(_endpointActionCollection, geeService);
+};
+
+InterceptorFactory.$inject = [require('./../gee/name')];
+
+
+class InterceptorProvider {
+
+	addAction(endpoint, action) {
+		const defaultAction = {
+			event: '',
+			mainDataName: null,
+			getMainData: (data) => {
+				return data;
+			}
+		};
+
+		Object.keys(defaultAction).forEach((key) => {
+			action[key] = action[key] || defaultAction[key];
+		});
+
+		return this.safePush(_endpointActionCollection, endpoint, action);
+	}
+
+	set endpointPrefix(value) {
+		_endpointPrefix = value;
+	}
+
+	get endpointPrefix() {
+		return _endpointPrefix;
+	}
+
+	safePush(arr, key, value) {
+		arr[key] = arr[key] || [];
+		arr[key].push(value);
+
+		return this;
+	}
+
+	get $get() {
+		return InterceptorFactory;
+	}
+
+}
+
+InterceptorProvider.$inject = [];
+
+
+const boot = (ngModule) => {
 	ngModule.provider(require('./name'), InterceptorProvider);
+};
+
+const provided = {
+	InterceptorProvider,
+	InterceptorFactory,
+	Interceptor
+};
+
+module.exports = {
+	boot,
+	provided
 };

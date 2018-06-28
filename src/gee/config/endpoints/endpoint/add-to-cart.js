@@ -1,7 +1,7 @@
-const { methods } = require('./../../../../helpers');
+const { url:urlHelper } = require('./../../../../helpers');
 
 module.exports = {
 	endpoint: '/carts/current/cartlines',
 	event: 'addToCart',
-	method: methods.post
+	method: urlHelper.methods.post
 };

@@ -65,55 +65,49 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var configs = {
-	prefix: 'swivInsite',
-	getName: function getName(name) {
-		var _name = name.replace(new RegExp('^' + configs.prefix), '');
-
-		return '' + configs.prefix + _name.charAt(0).toUpperCase() + _name.slice(1);
-	},
-	guidRegExp: '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}'
+module.exports = {
+	name: __webpack_require__(16),
+	url: __webpack_require__(17),
+	regex: __webpack_require__(18)
 };
-
-module.exports = configs;
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
-    getName = _require.getName;
+    nameHelper = _require.name;
 
-module.exports = getName('gee');
+module.exports = nameHelper.getName('gee');
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
-    getName = _require.getName;
+    nameHelper = _require.name;
 
-module.exports = getName('interceptor');
+module.exports = nameHelper.getName('interceptor');
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = 'insite.swiv';
+module.exports = 'swivGee';
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
-module.exports = 'swivGee';
+module.exports = 'insite.swiv';
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var prefix = __webpack_require__(4);
+var prefix = __webpack_require__(3);
 
 module.exports = prefix + 'Position';
 
@@ -134,7 +128,7 @@ module.exports = __webpack_require__(8);
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = window.angular ? window.angular.module(__webpack_require__(3), __webpack_require__(9)) : null;
+module.exports = window.angular ? window.angular.module(__webpack_require__(4), __webpack_require__(9)) : null;
 
 /***/ }),
 /* 9 */
@@ -149,8 +143,8 @@ module.exports = [__webpack_require__(10).name];
 var ngModule = __webpack_require__(11);
 
 __webpack_require__(14)(ngModule);
-__webpack_require__(17)(ngModule);
-__webpack_require__(21)(ngModule);
+__webpack_require__(20)(ngModule);
+__webpack_require__(26)(ngModule);
 
 module.exports = ngModule;
 
@@ -164,7 +158,7 @@ module.exports = window.angular ? window.angular.module(__webpack_require__(12),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(3) + '.core';
+module.exports = __webpack_require__(4) + '.core';
 
 /***/ }),
 /* 13 */
@@ -177,8 +171,8 @@ module.exports = [];
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (ngModule) {
-	__webpack_require__(15)(ngModule);
-	__webpack_require__(16)(ngModule);
+	__webpack_require__(15).boot(ngModule);
+	__webpack_require__(19).boot(ngModule);
 };
 
 /***/ }),
@@ -189,75 +183,177 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-module.exports = function (ngModule) {
+var GeeFactory = function GeeFactory() {
+	return window.swiv.gee.getService();
+};
 
-	var GeeFactory = function GeeFactory() {
-		return window.swiv.gee.getService();
-	};
+GeeFactory.$inject = [];
 
-	GeeFactory.$inject = [];
+var GeeProvider = function () {
+	function GeeProvider() {
+		_classCallCheck(this, GeeProvider);
+	}
 
-	var GeeProvider = function () {
-		function GeeProvider() {
-			_classCallCheck(this, GeeProvider);
+	_createClass(GeeProvider, [{
+		key: '$get',
+		get: function get() {
+			return GeeFactory;
 		}
+	}]);
 
-		_createClass(GeeProvider, [{
-			key: '$get',
-			get: function get() {
-				return GeeFactory;
-			}
-		}]);
+	return GeeProvider;
+}();
 
-		return GeeProvider;
-	}();
+GeeProvider.$inject = [];
 
-	GeeProvider.$inject = [];
-
+var boot = function boot(ngModule) {
 	ngModule.provider(__webpack_require__(1), GeeProvider);
+};
+
+var provided = {
+	GeeProvider: GeeProvider,
+	GeeFactory: GeeFactory
+};
+
+module.exports = {
+	boot: boot,
+	provided: provided
 };
 
 /***/ }),
 /* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+/***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-module.exports = function (ngModule) {
+var NameHelper = function () {
+	function NameHelper() {
+		_classCallCheck(this, NameHelper);
+	}
 
-	var _endpointPrefix = '';
+	_createClass(NameHelper, [{
+		key: 'getName',
+		value: function getName(name) {
+			var _ref = [this.prefix.charAt(0), this.prefix.slice(1)],
+			    start = _ref[0],
+			    end = _ref[1];
 
-	var self = void 0;
+			var _name = name.replace(new RegExp('^[' + start.toLowerCase() + start.toUpperCase() + ']' + end), '');
 
-	var _endpointActionCollection = {};
-
-	var Interceptor = function () {
-		function Interceptor(actions, geeService) {
-			_classCallCheck(this, Interceptor);
-
-			self = this;
-			this.actions = actions;
-			this.geeService = geeService;
+			return '' + this.prefix + _name.charAt(0).toUpperCase() + _name.slice(1);
 		}
+	}, {
+		key: 'prefix',
+		get: function get() {
+			return 'swivInsite';
+		}
+	}]);
 
-		_createClass(Interceptor, [{
-			key: 'response',
-			value: function response(res) {
-				var url = res.config.url.replace(window.location.hostname, '');
+	return NameHelper;
+}();
 
-				var _url$split = url.split('?');
+module.exports = new NameHelper();
 
-				var _url$split2 = _slicedToArray(_url$split, 1);
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
 
-				url = _url$split2[0];
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-				url = ('' + (url.charAt(0) === '/' || /http(s)?:/.test(url) ? '' : '/') + url).replace(/\.json$/, '');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-				if (res.config.gee !== false) {
+var UrlHelper = function () {
+	function UrlHelper() {
+		_classCallCheck(this, UrlHelper);
+	}
+
+	_createClass(UrlHelper, [{
+		key: 'getUri',
+		value: function getUri(url) {
+			return url.replace(/^http(s)?:\/\//, '').replace(/^[^/]+(\/)?/, '/').replace(/\?(.*)/, '').replace(/\.json$/, '');
+		}
+	}, {
+		key: 'isMethod',
+		value: function isMethod(method) {
+			var expected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.methods.get;
+
+			return (expected instanceof Array ? expected : [expected]).indexOf(method) !== -1;
+		}
+	}, {
+		key: 'methods',
+		get: function get() {
+			return {
+				'get': 'GET',
+				'post': 'POST',
+				'patch': 'PATCH',
+				'delete': 'DELETE'
+			};
+		}
+	}]);
+
+	return UrlHelper;
+}();
+
+module.exports = new UrlHelper();
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RegexHelper = function () {
+	function RegexHelper() {
+		_classCallCheck(this, RegexHelper);
+	}
+
+	_createClass(RegexHelper, [{
+		key: 'guidRegExp',
+		get: function get() {
+			return '[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
+		}
+	}]);
+
+	return RegexHelper;
+}();
+
+module.exports = new RegexHelper();
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _require = __webpack_require__(0),
+    urlHelper = _require.url;
+
+var _endpointPrefix = '';
+var _self = void 0; // eslint-disable-line consistent-this
+var _endpointActionCollection = {};
+
+var Interceptor = function () {
+	function Interceptor(actions, geeService) {
+		_classCallCheck(this, Interceptor);
+
+		_self = this;
+		this.actions = actions;
+		this.geeService = geeService;
+	}
+
+	_createClass(Interceptor, [{
+		key: 'response',
+		value: function response(res) {
+			if (res.config.gee !== false) {
+				(function () {
+					var url = urlHelper.getUri(res.config.url);
+
 					var triggerFn = function triggerFn(_ref) {
 						var event = _ref.event,
 						    preprocess = _ref.preprocess,
@@ -268,108 +364,126 @@ module.exports = function (ngModule) {
 						}
 
 						if (typeof process === 'function') {
-							process(res.data, self.geeService);
+							process(res.data, _self.geeService);
 						} else {
-							self.geeService.trigger(event, res.data);
+							_self.geeService.trigger(event, res.data);
 						}
 					};
 
-					for (var endpoint in self.actions) {
-						if (self.actions[endpoint] && self.actions[endpoint].length) {
+					for (var endpoint in _self.actions) {
+						if (_self.actions[endpoint] && _self.actions[endpoint].length) {
 							if (new RegExp('^' + _endpointPrefix + endpoint + '(/)?$').test(url)) {
-								self.actions[endpoint].forEach(triggerFn);
+								_self.actions[endpoint].forEach(function (action) {
+									if (urlHelper.isMethod(res.config.method, action.methods || action.method)) {
+										triggerFn(action);
+									}
+								});
 							}
 						}
 					}
-				}
-
-				return res;
+				})();
 			}
-		}]);
 
-		return Interceptor;
-	}();
-
-	var InterceptorFactory = function InterceptorFactory(geeService) {
-		return new Interceptor(_endpointActionCollection, geeService);
-	};
-
-	InterceptorFactory.$inject = [__webpack_require__(1)];
-
-	var InterceptorProvider = function () {
-		function InterceptorProvider() {
-			_classCallCheck(this, InterceptorProvider);
+			return res;
 		}
+	}]);
 
-		_createClass(InterceptorProvider, [{
-			key: 'addAction',
-			value: function addAction(endpoint, action) {
-				var defaultAction = {
-					event: '',
-					mainDataName: null,
-					getMainData: function getMainData(data) {
-						return data;
-					}
-				};
+	return Interceptor;
+}();
 
-				Object.keys(defaultAction).forEach(function (key) {
-					action[key] = action[key] || defaultAction[key];
-				});
+var InterceptorFactory = function InterceptorFactory(geeService) {
+	return new Interceptor(_endpointActionCollection, geeService);
+};
 
-				return this.safePush(_endpointActionCollection, endpoint, action);
-			}
-		}, {
-			key: 'safePush',
-			value: function safePush(arr, key, value) {
-				arr[key] = arr[key] || [];
-				arr[key].push(value);
+InterceptorFactory.$inject = [__webpack_require__(1)];
 
-				return this;
-			}
-		}, {
-			key: 'endpointPrefix',
-			set: function set(value) {
-				_endpointPrefix = value;
-			},
-			get: function get() {
-				return _endpointPrefix;
-			}
-		}, {
-			key: '$get',
-			get: function get() {
-				return InterceptorFactory;
-			}
-		}]);
+var InterceptorProvider = function () {
+	function InterceptorProvider() {
+		_classCallCheck(this, InterceptorProvider);
+	}
 
-		return InterceptorProvider;
-	}();
+	_createClass(InterceptorProvider, [{
+		key: 'addAction',
+		value: function addAction(endpoint, action) {
+			var defaultAction = {
+				event: '',
+				mainDataName: null,
+				getMainData: function getMainData(data) {
+					return data;
+				}
+			};
 
-	InterceptorProvider.$inject = [];
+			Object.keys(defaultAction).forEach(function (key) {
+				action[key] = action[key] || defaultAction[key];
+			});
 
+			return this.safePush(_endpointActionCollection, endpoint, action);
+		}
+	}, {
+		key: 'safePush',
+		value: function safePush(arr, key, value) {
+			arr[key] = arr[key] || [];
+			arr[key].push(value);
+
+			return this;
+		}
+	}, {
+		key: 'endpointPrefix',
+		set: function set(value) {
+			_endpointPrefix = value;
+		},
+		get: function get() {
+			return _endpointPrefix;
+		}
+	}, {
+		key: '$get',
+		get: function get() {
+			return InterceptorFactory;
+		}
+	}]);
+
+	return InterceptorProvider;
+}();
+
+InterceptorProvider.$inject = [];
+
+var boot = function boot(ngModule) {
 	ngModule.provider(__webpack_require__(2), InterceptorProvider);
 };
 
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
+var provided = {
+	InterceptorProvider: InterceptorProvider,
+	InterceptorFactory: InterceptorFactory,
+	Interceptor: Interceptor
+};
 
-module.exports = function (ngModule) {
-	__webpack_require__(18)(ngModule);
-	__webpack_require__(20)(ngModule);
+module.exports = {
+	boot: boot,
+	provided: provided
 };
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var directiveName = __webpack_require__(19);
+module.exports = function (ngModule) {
+	__webpack_require__(21)(ngModule);
+	__webpack_require__(23)(ngModule);
+	__webpack_require__(24)(ngModule);
+};
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var directiveName = __webpack_require__(22);
 var positionDirective = __webpack_require__(5).replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
 module.exports = function (ngModule) {
 
 	ngModule.directive(directiveName, [__webpack_require__(1), function (geeService) {
 		return {
-			restrict: 'AC',
+			restrict: 'A',
 			scope: {
 				product: '=' + directiveName
 			},
@@ -387,15 +501,15 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var prefix = __webpack_require__(4);
+var prefix = __webpack_require__(3);
 
 module.exports = prefix + 'Product';
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(5);
@@ -410,16 +524,50 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var directiveName = __webpack_require__(25);
+
 module.exports = function (ngModule) {
-	__webpack_require__(22)(ngModule);
-	__webpack_require__(23)(ngModule);
+
+	ngModule.directive(directiveName, [__webpack_require__(1), function (geeService) {
+		return {
+			restrict: 'A',
+			scope: {
+				product: '=' + directiveName
+			},
+			link: function link($scope, $element) {
+				$element.on('click', function () {
+					geeService.triggerRemoveFromCart({
+						product: window.angular.copy($scope.product),
+						list: 'Cart'
+					});
+				});
+			}
+		};
+	}]);
 };
 
 /***/ }),
-/* 22 */
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var prefix = __webpack_require__(3);
+
+module.exports = prefix + 'RemoveFromCart';
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = function (ngModule) {
+	__webpack_require__(27)(ngModule);
+	__webpack_require__(28)(ngModule);
+};
+
+/***/ }),
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var interceptor = __webpack_require__(2);
@@ -432,12 +580,12 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 23 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var interceptor = __webpack_require__(2);
 
-var _actions = [__webpack_require__(24), __webpack_require__(25), __webpack_require__(26), __webpack_require__(27), __webpack_require__(28), __webpack_require__(29)];
+var _actions = [__webpack_require__(29), __webpack_require__(30), __webpack_require__(31), __webpack_require__(32), __webpack_require__(33), __webpack_require__(34), __webpack_require__(35)];
 
 module.exports = function (ngModule) {
 	ngModule.config([interceptor + 'Provider', function ($interceptorProvider) {
@@ -449,7 +597,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 24 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -458,19 +606,19 @@ module.exports = {
 };
 
 /***/ }),
-/* 25 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
-    guidRegExp = _require.guidRegExp;
+    regexHelper = _require.regex;
 
 module.exports = {
-	endpoint: '/products/' + guidRegExp,
+	endpoint: '/products/' + regexHelper.guidRegExp,
 	event: 'productDetail'
 };
 
 /***/ }),
-/* 26 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -479,7 +627,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 27 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -499,7 +647,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 28 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -514,7 +662,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 29 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -524,6 +672,19 @@ module.exports = {
 			geeService.configs.set('currencyCode', data.currency.currencyCode);
 		}
 	}
+};
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(0),
+    urlHelper = _require.url;
+
+module.exports = {
+	endpoint: '/carts/current/cartlines',
+	event: 'addToCart',
+	method: urlHelper.methods.post
 };
 
 /***/ })

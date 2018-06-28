@@ -7,3 +7,4 @@ env:
 rules:
   class-methods-use-this: [off]
   no-restricted-globals: [off]
+  consistent-this: [error, self, _self, vm]

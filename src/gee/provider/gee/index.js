@@ -1,21 +1,31 @@
-module.exports = (ngModule) => {
+const GeeFactory = () => {
+	return window.swiv.gee.getService();
+};
 
-	const GeeFactory = () => {
-		return window.swiv.gee.getService();
-	};
-
-	GeeFactory.$inject = [];
+GeeFactory.$inject = [];
 
 
-	class GeeProvider {
+class GeeProvider {
 
-		get $get() {
-			return GeeFactory;
-		}
-
+	get $get() {
+		return GeeFactory;
 	}
 
-	GeeProvider.$inject = [];
+}
 
+GeeProvider.$inject = [];
+
+
+const boot = (ngModule) => {
 	ngModule.provider(require('./name'), GeeProvider);
+};
+
+const provided = {
+	GeeProvider,
+	GeeFactory
+};
+
+module.exports = {
+	boot,
+	provided
 };

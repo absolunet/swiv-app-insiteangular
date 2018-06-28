@@ -1,4 +1,4 @@
 module.exports = (ngModule) => {
-	require('./gee')(ngModule);
-	require('./interceptor')(ngModule);
+	require('./gee').boot(ngModule);
+	require('./interceptor').boot(ngModule);
 };

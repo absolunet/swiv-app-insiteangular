@@ -1,3 +1,3 @@
-const { getName } = require('./../../../helpers');
+const { name:nameHelper } = require('./../../../helpers');
 
-module.exports = getName('interceptor');
+module.exports = nameHelper.getName('interceptor');

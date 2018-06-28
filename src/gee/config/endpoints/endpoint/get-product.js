@@ -1,6 +1,6 @@
-const { guidRegExp } = require('./../../../../helpers');
+const { regex:regexHelper } = require('./../../../../helpers');
 
 module.exports = {
-	endpoint: `/products/${guidRegExp}`,
+	endpoint: `/products/${regexHelper.guidRegExp}`,
 	event: 'productDetail'
 };
