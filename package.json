@@ -16,6 +16,7 @@
     "url": "https://github.com/absolunet/swiv-app-insiteangular/issues"
   },
   "scripts": {
+    "test": "jest",
     "dev": "npm run development",
     "dev-local": "npm run development-local",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -32,6 +33,7 @@
     "angular": "1.3.15",
     "cross-env": "^5.1",
     "eslint-loader": "^2.0.0",
+    "jest": "^23.2.0",
     "laravel-mix": "2.1.11",
     "laravel-mix-eslint": "^0.1.1"
   }
