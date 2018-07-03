@@ -8,12 +8,13 @@ module.exports = (ngModule) => {
 			return {
 				restrict: 'A',
 				scope: {
-					product: `=${directiveName}`
+					products: `=${directiveName}`
 				},
 				link: ($scope, $element) => {
 					$element.on('click', () => {
+						const products = angular.copy($scope.products);
 						geeService.triggerRemoveFromCart({
-							product: window.angular.copy($scope.product),
+							products: products instanceof Array ? products : [products],
 							list: 'Cart'
 						});
 					});
