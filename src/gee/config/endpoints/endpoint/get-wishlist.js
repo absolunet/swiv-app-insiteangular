@@ -1,7 +1,7 @@
-const { guidRegExp } = require('./../../../../helpers');
+const { regex:regexHelper } = require('./../../../../helpers');
 
 module.exports = {
-	endpoint: `/wishlists/${guidRegExp}`,
+	endpoint: `/wishlists/${regexHelper.guidRegExp}`,
 	event: 'productImpression',
 	preprocess: (response) => {
 		response.products = response.wishListLineCollection;
