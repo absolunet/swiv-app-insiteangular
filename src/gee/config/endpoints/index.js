@@ -7,7 +7,8 @@ const _actions = [
 	require('./endpoint/get-wishlists'),
 	require('./endpoint/get-wishlist'),
 	require('./endpoint/current-session'),
-	require('./endpoint/add-to-cart')
+	require('./endpoint/add-to-cart'),
+	require('./endpoint/save-cart')
 ];
 
 module.exports = (ngModule) => {
