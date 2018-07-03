@@ -13,6 +13,8 @@ class UrlHelper {
 			'get': 'GET',
 			'post': 'POST',
 			'patch': 'PATCH',
+			'put': 'PUT',
+			'options': 'OPTIONS',
 			'delete': 'DELETE'
 		};
 	}
