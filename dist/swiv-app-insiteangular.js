@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,9 +68,9 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-	name: __webpack_require__(16),
-	url: __webpack_require__(17),
-	regex: __webpack_require__(18)
+	name: __webpack_require__(19),
+	url: __webpack_require__(20),
+	regex: __webpack_require__(21)
 };
 
 /***/ }),
@@ -105,6 +105,103 @@ module.exports = 'insite.swiv';
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	endpointCollection: {},
+	prefix: ''
+};
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var InterceptorService = __webpack_require__(7);
+
+var InterceptorFactory = function InterceptorFactory(geeService) {
+	return new InterceptorService(geeService);
+};
+
+InterceptorFactory.$inject = [__webpack_require__(1)];
+
+module.exports = InterceptorFactory;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _require = __webpack_require__(0),
+    urlHelper = _require.url;
+
+var config = __webpack_require__(5);
+var _self = void 0; // eslint-disable-line consistent-this
+
+module.exports = function () {
+	function InterceptorService(geeService) {
+		_classCallCheck(this, InterceptorService);
+
+		_self = this;
+		this.actions = config.endpointCollection;
+		this.geeService = geeService;
+	}
+
+	_createClass(InterceptorService, [{
+		key: 'response',
+		value: function response(res) {
+			if (res.config.gee !== false) {
+				(function () {
+					var url = urlHelper.getUri(res.config.url);
+
+					var triggerFn = function triggerFn(_ref) {
+						var event = _ref.event,
+						    preprocess = _ref.preprocess,
+						    process = _ref.process,
+						    postprocess = _ref.postprocess;
+
+						if (typeof preprocess === 'function') {
+							if (preprocess(res.data, res.config.data) === false) {
+								return;
+							}
+						}
+
+						if (typeof process === 'function') {
+							process(res.data, res.config.data, _self.geeService);
+						} else {
+							_self.geeService.trigger(event, res.data);
+						}
+
+						if (typeof postprocess === 'function') {
+							postprocess(res.data, res.config.data);
+						}
+					};
+
+					for (var endpoint in _self.actions) {
+						if (_self.actions[endpoint] && _self.actions[endpoint].length) {
+							if (new RegExp('^' + config.prefix + endpoint + '(/)?$').test(url)) {
+								_self.actions[endpoint].forEach(function (action) {
+									if (urlHelper.isMethod(res.config.method, action.methods || action.method)) {
+										triggerFn(action);
+									}
+								});
+							}
+						}
+					}
+				})();
+			}
+
+			return res;
+		}
+	}]);
+
+	return InterceptorService;
+}();
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var prefix = __webpack_require__(3);
@@ -112,71 +209,71 @@ var prefix = __webpack_require__(3);
 module.exports = prefix + 'Position';
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(7);
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(8);
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = window.angular ? window.angular.module(__webpack_require__(4), __webpack_require__(9)) : null;
-
-/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = [__webpack_require__(10).name];
+module.exports = __webpack_require__(10);
+
 
 /***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ngModule = __webpack_require__(11);
-
-__webpack_require__(14)(ngModule);
-__webpack_require__(20)(ngModule);
-__webpack_require__(26)(ngModule);
-
-module.exports = ngModule;
+module.exports = __webpack_require__(11);
 
 /***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = window.angular ? window.angular.module(__webpack_require__(12), __webpack_require__(13)) : null;
+module.exports = window.angular ? window.angular.module(__webpack_require__(4), __webpack_require__(12)) : null;
 
 /***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(4) + '.core';
+module.exports = [__webpack_require__(13).name];
 
 /***/ }),
 /* 13 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = [];
+var ngModule = __webpack_require__(14);
+
+__webpack_require__(17)(ngModule);
+__webpack_require__(24)(ngModule);
+__webpack_require__(30)(ngModule);
+
+module.exports = ngModule;
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = function (ngModule) {
-	__webpack_require__(15).boot(ngModule);
-	__webpack_require__(19).boot(ngModule);
-};
+module.exports = window.angular ? window.angular.module(__webpack_require__(15), __webpack_require__(16)) : null;
 
 /***/ }),
 /* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(4) + '.core';
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = [];
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = function (ngModule) {
+	__webpack_require__(18).boot(ngModule);
+	__webpack_require__(22).boot(ngModule);
+};
+
+/***/ }),
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -221,7 +318,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -257,7 +354,7 @@ var NameHelper = function () {
 module.exports = new NameHelper();
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -288,6 +385,8 @@ var UrlHelper = function () {
 				'get': 'GET',
 				'post': 'POST',
 				'patch': 'PATCH',
+				'put': 'PUT',
+				'options': 'OPTIONS',
 				'delete': 'DELETE'
 			};
 		}
@@ -299,7 +398,7 @@ var UrlHelper = function () {
 module.exports = new UrlHelper();
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -324,78 +423,38 @@ var RegexHelper = function () {
 module.exports = new RegexHelper();
 
 /***/ }),
-/* 19 */
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var InterceptorProvider = __webpack_require__(23);
+var InterceptorFactory = __webpack_require__(6);
+var InterceptorService = __webpack_require__(7);
+
+var boot = function boot(ngModule) {
+	ngModule.provider(__webpack_require__(2), InterceptorProvider);
+};
+
+var provided = {
+	InterceptorProvider: InterceptorProvider,
+	InterceptorFactory: InterceptorFactory,
+	InterceptorService: InterceptorService
+};
+
+module.exports = {
+	boot: boot,
+	provided: provided
+};
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _require = __webpack_require__(0),
-    urlHelper = _require.url;
-
-var _endpointPrefix = '';
-var _self = void 0; // eslint-disable-line consistent-this
-var _endpointActionCollection = {};
-
-var Interceptor = function () {
-	function Interceptor(actions, geeService) {
-		_classCallCheck(this, Interceptor);
-
-		_self = this;
-		this.actions = actions;
-		this.geeService = geeService;
-	}
-
-	_createClass(Interceptor, [{
-		key: 'response',
-		value: function response(res) {
-			if (res.config.gee !== false) {
-				(function () {
-					var url = urlHelper.getUri(res.config.url);
-
-					var triggerFn = function triggerFn(_ref) {
-						var event = _ref.event,
-						    preprocess = _ref.preprocess,
-						    process = _ref.process;
-
-						if (typeof preprocess === 'function') {
-							preprocess(res.data);
-						}
-
-						if (typeof process === 'function') {
-							process(res.data, _self.geeService);
-						} else {
-							_self.geeService.trigger(event, res.data);
-						}
-					};
-
-					for (var endpoint in _self.actions) {
-						if (_self.actions[endpoint] && _self.actions[endpoint].length) {
-							if (new RegExp('^' + _endpointPrefix + endpoint + '(/)?$').test(url)) {
-								_self.actions[endpoint].forEach(function (action) {
-									if (urlHelper.isMethod(res.config.method, action.methods || action.method)) {
-										triggerFn(action);
-									}
-								});
-							}
-						}
-					}
-				})();
-			}
-
-			return res;
-		}
-	}]);
-
-	return Interceptor;
-}();
-
-var InterceptorFactory = function InterceptorFactory(geeService) {
-	return new Interceptor(_endpointActionCollection, geeService);
-};
-
-InterceptorFactory.$inject = [__webpack_require__(1)];
+var config = __webpack_require__(5);
+var InterceptorFactory = __webpack_require__(6);
 
 var InterceptorProvider = function () {
 	function InterceptorProvider() {
@@ -417,7 +476,7 @@ var InterceptorProvider = function () {
 				action[key] = action[key] || defaultAction[key];
 			});
 
-			return this.safePush(_endpointActionCollection, endpoint, action);
+			return this.safePush(config.endpointCollection, endpoint, action);
 		}
 	}, {
 		key: 'safePush',
@@ -430,10 +489,10 @@ var InterceptorProvider = function () {
 	}, {
 		key: 'endpointPrefix',
 		set: function set(value) {
-			_endpointPrefix = value;
+			config.prefix = value;
 		},
 		get: function get() {
-			return _endpointPrefix;
+			return config.prefix;
 		}
 	}, {
 		key: '$get',
@@ -447,37 +506,24 @@ var InterceptorProvider = function () {
 
 InterceptorProvider.$inject = [];
 
-var boot = function boot(ngModule) {
-	ngModule.provider(__webpack_require__(2), InterceptorProvider);
-};
-
-var provided = {
-	InterceptorProvider: InterceptorProvider,
-	InterceptorFactory: InterceptorFactory,
-	Interceptor: Interceptor
-};
-
-module.exports = {
-	boot: boot,
-	provided: provided
-};
+module.exports = InterceptorProvider;
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (ngModule) {
-	__webpack_require__(21)(ngModule);
-	__webpack_require__(23)(ngModule);
-	__webpack_require__(24)(ngModule);
+	__webpack_require__(25)(ngModule);
+	__webpack_require__(27)(ngModule);
+	__webpack_require__(28)(ngModule);
 };
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var directiveName = __webpack_require__(22);
-var positionDirective = __webpack_require__(5).replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+var directiveName = __webpack_require__(26);
+var positionDirective = __webpack_require__(8).replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
 module.exports = function (ngModule) {
 
@@ -501,7 +547,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var prefix = __webpack_require__(3);
@@ -509,10 +555,10 @@ var prefix = __webpack_require__(3);
 module.exports = prefix + 'Product';
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var directiveName = __webpack_require__(5);
+var directiveName = __webpack_require__(8);
 
 module.exports = function (ngModule) {
 
@@ -524,10 +570,10 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var directiveName = __webpack_require__(25);
+var directiveName = __webpack_require__(29);
 
 module.exports = function (ngModule) {
 
@@ -535,12 +581,13 @@ module.exports = function (ngModule) {
 		return {
 			restrict: 'A',
 			scope: {
-				product: '=' + directiveName
+				products: '=' + directiveName
 			},
 			link: function link($scope, $element) {
 				$element.on('click', function () {
+					var products = angular.copy($scope.products);
 					geeService.triggerRemoveFromCart({
-						product: window.angular.copy($scope.product),
+						products: products instanceof Array ? products : [products],
 						list: 'Cart'
 					});
 				});
@@ -550,7 +597,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var prefix = __webpack_require__(3);
@@ -558,16 +605,16 @@ var prefix = __webpack_require__(3);
 module.exports = prefix + 'RemoveFromCart';
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (ngModule) {
-	__webpack_require__(27)(ngModule);
-	__webpack_require__(28)(ngModule);
+	__webpack_require__(31)(ngModule);
+	__webpack_require__(32)(ngModule);
 };
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var interceptor = __webpack_require__(2);
@@ -580,12 +627,12 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var interceptor = __webpack_require__(2);
 
-var _actions = [__webpack_require__(29), __webpack_require__(30), __webpack_require__(31), __webpack_require__(32), __webpack_require__(33), __webpack_require__(34), __webpack_require__(35)];
+var _actions = [__webpack_require__(33), __webpack_require__(34), __webpack_require__(35), __webpack_require__(36), __webpack_require__(37), __webpack_require__(38), __webpack_require__(39), __webpack_require__(40)];
 
 module.exports = function (ngModule) {
 	ngModule.config([interceptor + 'Provider', function ($interceptorProvider) {
@@ -597,7 +644,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -606,7 +653,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -618,7 +665,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 31 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -627,7 +674,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 32 */
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -647,14 +694,14 @@ module.exports = {
 };
 
 /***/ }),
-/* 33 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
-    guidRegExp = _require.guidRegExp;
+    regexHelper = _require.regex;
 
 module.exports = {
-	endpoint: '/wishlists/' + guidRegExp,
+	endpoint: '/wishlists/' + regexHelper.guidRegExp,
 	event: 'productImpression',
 	preprocess: function preprocess(response) {
 		response.products = response.wishListLineCollection;
@@ -662,29 +709,54 @@ module.exports = {
 };
 
 /***/ }),
-/* 34 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = {
 	endpoint: '/sessions/current',
-	process: function process(data, geeService) {
-		if (data && data.currency && data.currency.currencyCode) {
-			geeService.configs.set('currencyCode', data.currency.currencyCode);
+	process: function process(response, request, geeService) {
+		if (response && response.currency && response.currency.currencyCode) {
+			geeService.configs.set('currencyCode', response.currency.currencyCode);
 		}
 	}
 };
 
 /***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
     urlHelper = _require.url;
 
 module.exports = {
-	endpoint: '/carts/current/cartlines',
+	endpoint: '/carts/current/cartlines(/batch)?',
 	event: 'addToCart',
-	method: urlHelper.methods.post
+	method: urlHelper.methods.post,
+	preprocess: function preprocess(response) {
+		response.products = response.cartLines || [angular.copy(response)];
+	}
+};
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(0),
+    urlHelper = _require.url;
+
+module.exports = {
+	endpoint: '/carts/current',
+	event: 'removeFromCart',
+	method: urlHelper.methods.patch,
+	preprocess: function preprocess(response, request) {
+		if (response.status !== 'Saved') {
+			return false;
+		}
+
+		response.products = request.cartLines;
+
+		return true;
+	}
 };
 
 /***/ })
