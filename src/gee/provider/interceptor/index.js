@@ -15,15 +15,21 @@ class Interceptor {
 		if (res.config.gee !== false) {
 			const url = urlHelper.getUri(res.config.url);
 
-			const triggerFn = ({ event, preprocess, process }) => {
+			const triggerFn = ({ event, preprocess, process, postprocess }) => {
 				if (typeof preprocess === 'function') {
-					preprocess(res.data);
+					if (preprocess(res.data, res.config.data) === false) {
+						return;
+					}
 				}
 
 				if (typeof process === 'function') {
-					process(res.data, _self.geeService);
+					process(res.data, res.config.data, _self.geeService);
 				} else {
 					_self.geeService.trigger(event, res.data);
+				}
+
+				if (typeof postprocess === 'function') {
+					postprocess(res.data, res.config.data);
 				}
 			};
 

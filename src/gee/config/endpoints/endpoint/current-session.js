@@ -1,8 +1,8 @@
 module.exports = {
 	endpoint: '/sessions/current',
-	process: (data, geeService) => {
-		if (data && data.currency && data.currency.currencyCode) {
-			geeService.configs.set('currencyCode', data.currency.currencyCode);
+	process: (response, request, geeService) => {
+		if (response && response.currency && response.currency.currencyCode) {
+			geeService.configs.set('currencyCode', response.currency.currencyCode);
 		}
 	}
 };
