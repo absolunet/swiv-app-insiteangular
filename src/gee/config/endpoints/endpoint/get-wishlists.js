@@ -1,5 +1,5 @@
 module.exports = {
-	endpoint: `/wishlists`,
+	endpoint: '/wishlists',
 	event: 'productImpression',
 	preprocess: (response) => {
 		const products = [];
