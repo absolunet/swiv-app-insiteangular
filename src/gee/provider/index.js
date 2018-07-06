@@ -1,4 +1,5 @@
 module.exports = (ngModule) => {
-	require('./gee').boot(ngModule);
-	require('./interceptor').boot(ngModule);
+	require('./gee')(ngModule);
+	require('./interceptor')(ngModule);
+	require('./property-history')(ngModule);
 };

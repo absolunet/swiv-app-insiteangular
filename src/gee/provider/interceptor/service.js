@@ -4,48 +4,53 @@ let _self; // eslint-disable-line consistent-this
 
 module.exports = class InterceptorService {
 
-	constructor(geeService) {
+	constructor(geeService, propertyHistoryService) {
 		_self = this;
 		this.actions = config.endpointCollection;
 		this.geeService = geeService;
+		this.propertyHistoryService = propertyHistoryService;
 	}
 
 	response(res) {
+		_self.handleResponse(angular.copy(res));
+
+		return res;
+	}
+
+	handleResponse(res) {
 		if (res.config.gee !== false) {
 			const url = urlHelper.getUri(res.config.url);
 
-			const triggerFn = ({ event, preprocess, process, postprocess }) => {
-				if (typeof preprocess === 'function') {
-					if (preprocess(res.data, res.config.data) === false) {
-						return;
-					}
-				}
-
-				if (typeof process === 'function') {
-					process(res.data, res.config.data, _self.geeService);
-				} else {
-					_self.geeService.trigger(event, res.data);
-				}
-
-				if (typeof postprocess === 'function') {
-					postprocess(res.data, res.config.data);
-				}
-			};
-
-			for (const endpoint in _self.actions) {
-				if (_self.actions[endpoint] && _self.actions[endpoint].length) {
+			for (const endpoint in this.actions) {
+				if (this.actions[endpoint] && this.actions[endpoint].length) {
 					if ((new RegExp(`^${config.prefix}${endpoint}(/)?$`)).test(url)) {
-						_self.actions[endpoint].forEach((action) => {
+						this.actions[endpoint].forEach((action) => {
 							if (urlHelper.isMethod(res.config.method, action.methods || action.method)) {
-								triggerFn(action);
+								this.triggerAction(res, action);
 							}
 						});
 					}
 				}
 			}
 		}
+	}
 
-		return res;
+	triggerAction(res, { event, preprocess, process, postprocess }) {
+		if (typeof preprocess === 'function') {
+			if (preprocess(res.data, res.config.data, this) === false) {
+				return;
+			}
+		}
+
+		if (typeof process === 'function') {
+			process(res.data, res.config.data, this);
+		} else {
+			this.geeService.trigger(event, res.data);
+		}
+
+		if (typeof postprocess === 'function') {
+			postprocess(res.data, res.config.data, this);
+		}
 	}
 
 };
