@@ -1,25 +1,15 @@
 const directiveName = require('./name');
+const productDirective = require('./../product/name');
+const scope = require('./scope');
+const linkFactory = require('./link');
 
 module.exports = (ngModule) => {
-
-	ngModule.directive(directiveName, [
-		require('./../../provider/gee/name'),
-		(geeService) => {
-			return {
-				restrict: 'A',
-				scope: {
-					products: `=${directiveName}`
-				},
-				link: ($scope, $element) => {
-					$element.on('click', () => {
-						const products = angular.copy($scope.products);
-						geeService.triggerRemoveFromCart({
-							products: products instanceof Array ? products : [products],
-							list: 'Cart'
-						});
-					});
-				}
-			};
-		}
-	]);
+	ngModule.directive(directiveName, require('./inject')((...args) => {
+		return {
+			restrict: 'A',
+			require: [`^?${productDirective}`],
+			scope: scope,
+			link: linkFactory(...args)
+		};
+	}));
 };
