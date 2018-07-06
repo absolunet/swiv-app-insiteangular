@@ -1195,6 +1195,7 @@ module.exports = {
 		}
 
 		response.products = request.cartLines;
+		response.list = 'Cart';
 
 		return true;
 	}
