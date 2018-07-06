@@ -1,15 +1,18 @@
 const config = require('./config');
+const { url:urlHelper } = require('./../../../helpers');
+const { Injectable } = require('./../../../helpers/class');
 const InterceptorFactory = require('./factory');
 
-class InterceptorProvider {
+module.exports = class InterceptorProvider extends Injectable {
 
 	addAction(endpoint, action) {
 		const defaultAction = {
+			endpoint: null,
 			event: '',
-			mainDataName: null,
-			getMainData: (data) => {
-				return data;
-			}
+			method: urlHelper.methods.get,
+			preprocess: null,
+			process: null,
+			postprocess: null
 		};
 
 		Object.keys(defaultAction).forEach((key) => {
@@ -38,8 +41,4 @@ class InterceptorProvider {
 		return InterceptorFactory;
 	}
 
-}
-
-InterceptorProvider.$inject = [];
-
-module.exports = InterceptorProvider;
+};
