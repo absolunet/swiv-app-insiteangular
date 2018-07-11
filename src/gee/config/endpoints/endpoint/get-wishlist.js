@@ -4,6 +4,8 @@ module.exports = {
 	endpoint: `/wishlists/${regexHelper.guidRegExp}`,
 	event: 'productImpression',
 	preprocess: (response) => {
-		response.products = response.wishListLineCollection;
+		return {
+			products: response.wishListLineCollection
+		};
 	}
 };

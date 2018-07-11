@@ -9,8 +9,8 @@ module.exports = {
 			return false;
 		}
 
-		response.products = request.cartLines;
-
-		return true;
+		return {
+			products: request.cartLines
+		};
 	}
 };

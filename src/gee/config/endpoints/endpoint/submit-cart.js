@@ -9,9 +9,18 @@ module.exports = {
 			return false;
 		}
 
-		response.products = request.cartLines;
-		response.list = 'Cart';
-
-		return true;
+		return {
+			products: request.cartLines,
+			list: 'Cart',
+			purchase: {
+				actionField: {
+					id: response.erpOrderNumber,
+					affiliation: 'Online Store',
+					revenue: response.orderGrandTotal.toFixed(2),
+					tax: response.totalTax.toFixed(2),
+					shipping: response.shippingAndHandling.toFixed(2)
+				}
+			}
+		};
 	}
 };

@@ -10,6 +10,6 @@ module.exports = {
 			});
 		});
 
-		response.products = products;
+		return { products };
 	}
 };
