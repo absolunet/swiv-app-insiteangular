@@ -3,4 +3,5 @@ module.exports = (ngModule) => {
 	require('./position')(ngModule);
 	require('./product-click')(ngModule);
 	require('./remove-from-cart')(ngModule);
+	require('./checkout-step')(ngModule);
 };
