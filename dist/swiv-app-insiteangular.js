@@ -1118,8 +1118,6 @@ module.exports = false;
 /* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1221,7 +1219,12 @@ module.exports = function (ngModule) {
 					}
 
 					var diffValue = _typeof(newObj[key]) === 'object' && _typeof(oldObj[key]) === 'object' ? _this4.getDiff(newObj[key], oldObj[key]) : newObj[key];
-					var returnedObj = _extends({}, diff, _defineProperty({}, key, diffValue));
+					var returnedObj = {};
+					Object.keys(diff).forEach(function (k) {
+						returnedObj[k] = diff[k];
+					});
+
+					returnedObj[key] = diffValue;
 
 					if (_typeof(returnedObj[key]) === 'object' && returnedObj[key] && Object.keys(returnedObj[key]).length === 0) {
 						delete returnedObj[key];

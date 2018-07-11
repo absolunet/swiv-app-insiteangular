@@ -105,10 +105,12 @@ module.exports = (ngModule) => {
 				}
 
 				const diffValue = typeof newObj[key] === 'object' && typeof oldObj[key] === 'object' ? this.getDiff(newObj[key], oldObj[key]) : newObj[key];
-				const returnedObj = {
-					...diff,
-					[key]: diffValue
-				};
+				const returnedObj = {};
+				Object.keys(diff).forEach((k) => {
+					returnedObj[k] = diff[k];
+				});
+
+				returnedObj[key] = diffValue;
 
 				if (typeof returnedObj[key] === 'object' && returnedObj[key] && Object.keys(returnedObj[key]).length === 0) {
 					delete returnedObj[key];
