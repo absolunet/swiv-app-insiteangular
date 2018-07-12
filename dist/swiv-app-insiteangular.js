@@ -1193,7 +1193,7 @@ module.exports = function (ngModule) {
 
 				Object.keys(watchedProperties).forEach(function (property) {
 					var resolvedDiff = resolve(property, diff);
-					if (resolvedDiff) {
+					if (typeof resolvedDiff !== 'undefined') {
 						var oldValue = resolve(property, oldCart);
 						var option = typeof watchedProperties[property] === 'function' ? watchedProperties[property](resolvedDiff, oldValue) : property;
 						options.push(option);
@@ -1237,17 +1237,20 @@ module.exports = function (ngModule) {
 			key: 'watchedProperties',
 			get: function get() {
 				return {
+					shipTo: function shipTo() {
+						return 'Change shipping information';
+					},
 					notes: function notes(n, o) {
 						return (!n || !o) && n !== o ? (n ? 'Add' : 'Remove') + ' notes' : null;
 					},
 					carrier: function carrier(n) {
-						return n && n.description ? 'Using carrier "' + n.description + '"' : null;
+						return n && n.description ? 'Use carrier "' + n.description + '"' : null;
 					},
 					shipVia: function shipVia(n) {
 						return n && n.description ? 'Order via "' + n.description + '"' : null;
 					},
 					paymentMethod: function paymentMethod(n) {
-						return n && n.description ? 'Using payment method "' + n.description + '"' : null;
+						return n && n.description ? 'Use payment method "' + n.description + '"' : null;
 					},
 					poNumber: function poNumber(n, o) {
 						return (!n || !o) && n !== o ? (n ? 'Add' : 'Remove') + ' PO number' : null;
