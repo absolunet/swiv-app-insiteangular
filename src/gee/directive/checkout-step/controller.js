@@ -84,7 +84,7 @@ module.exports = (ngModule) => {
 			const { watchedProperties } = this;
 			Object.keys(watchedProperties).forEach((property) => {
 				const resolvedDiff = resolve(property, diff);
-				if (resolvedDiff) {
+				if (typeof resolvedDiff !== 'undefined') {
 					const oldValue = resolve(property, oldCart);
 					const option = typeof watchedProperties[property] === 'function' ? watchedProperties[property](resolvedDiff, oldValue) : property;
 					options.push(option);
