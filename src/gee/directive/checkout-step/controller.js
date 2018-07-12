@@ -24,17 +24,20 @@ module.exports = (ngModule) => {
 
 		get watchedProperties() {
 			return {
+				shipTo: () => {
+					return 'Change shipping information';
+				},
 				notes: (n, o) => {
 					return (!n || !o) && n !== o ? `${n ? 'Add' : 'Remove'} notes` : null;
 				},
 				carrier: (n) => {
-					return n && n.description ? `Using carrier "${n.description}"` : null;
+					return n && n.description ? `Use carrier "${n.description}"` : null;
 				},
 				shipVia: (n) => {
 					return n && n.description ? `Order via "${n.description}"` : null;
 				},
 				paymentMethod: (n) => {
-					return n && n.description ? `Using payment method "${n.description}"` : null;
+					return n && n.description ? `Use payment method "${n.description}"` : null;
 				},
 				poNumber: (n, o) => {
 					return (!n || !o) && n !== o ? `${n ? 'Add' : 'Remove'} PO number` : null;
