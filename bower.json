@@ -1,6 +1,5 @@
 {
   "name": "swiv-app-insiteangular",
-  "version": "1.0.0-rc.1",
   "description": "Swiv implementation on Insite Software built on top of AngularJS",
   "definition": "Swiv implementation on Insite Software built on top of AngularJS",
   "homepage": "https://github.com/absolunet/swiv-app-insiteangular",
@@ -38,6 +37,6 @@
     ".travis.yml"
   ],
   "dependencies": {
-    "swiv": "^1.0.0-rc.1"
+    "swiv": "^1.0.0-rc.2"
   }
 }
