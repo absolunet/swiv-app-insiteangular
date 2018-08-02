@@ -5,12 +5,14 @@ module.exports = {
 	event: 'removeFromCart',
 	method: urlHelper.methods.patch,
 	preprocess: (response, request) => {
-		if (response.status !== 'Saved') {
+		if (response.status !== 'Saved' || !request.cartLines || request.cartLines.length === 0) {
 			return false;
 		}
 
 		return {
-			products: request.cartLines
+			main: request.cartLines,
+			misc: {},
+			common: {}
 		};
 	}
 };

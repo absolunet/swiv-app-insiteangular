@@ -601,8 +601,6 @@ module.exports = InterceptorFactory;
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -660,12 +658,12 @@ module.exports = function () {
 			    postprocess = _ref.postprocess;
 
 			if (typeof preprocess === 'function') {
-				var preprocessedValue = preprocess(res.data, res.config.data, this);
+				var preprocessedValue = preprocess(res.data, res.config.data, this, angular.copy(res.config));
 				if (preprocessedValue === false) {
 					return;
 				}
 
-				res.data = (typeof preprocessedValue === 'undefined' ? 'undefined' : _typeof(preprocessedValue)) === 'object' && preprocessedValue ? preprocessedValue : res.data;
+				res.data = preprocessedValue;
 			}
 
 			if (typeof process === 'function') {
@@ -999,18 +997,27 @@ module.exports = {
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var positionDirective = __webpack_require__(9).replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+var _require = __webpack_require__(0),
+    stringHelper = _require.string;
+
+var positionDirective = stringHelper.kebabCase(__webpack_require__(9));
 var getProductInControllers = __webpack_require__(11);
 
 module.exports = function (geeService) {
 	return function ($scope, $element, $attrs, $ctrls) {
-		$element.on('click', function () {
-			var product = angular.copy($scope.product || getProductInControllers($ctrls));
-			if (product) {
-				var position = $element.attr(positionDirective) || $element.closest('[' + positionDirective + ']').attr(positionDirective);
-				product.properties = product.properties || {};
-				product.properties.position = position;
-				geeService.triggerProductClick(product);
+		$element.on('click', function ($event) {
+			if (!$event.isDefaultPrevented()) {
+				var product = angular.copy($scope.product || getProductInControllers($ctrls));
+				if (product) {
+					var position = $element.attr(positionDirective) || $element.closest('[' + positionDirective + ']').attr(positionDirective);
+					geeService.triggerProductClick({
+						main: product,
+						misc: {},
+						common: {
+							position: position
+						}
+					});
+				}
 			}
 		});
 	};
@@ -1069,8 +1076,10 @@ module.exports = function (geeService) {
 			if (products) {
 				var productsCopy = angular.copy(products instanceof Array ? products : [products]);
 				geeService.triggerRemoveFromCart({
-					products: productsCopy,
-					list: 'Cart'
+					main: productsCopy,
+					common: {
+						list: 'Cart'
+					}
 				});
 			}
 		});
@@ -1176,9 +1185,11 @@ module.exports = function (ngModule) {
 			key: 'pageResolved',
 			value: function pageResolved(cart) {
 				this.geeService.triggerCheckout({
-					products: cart.cartLines,
-					actionField: {
-						step: this.step
+					main: cart.cartLines,
+					misc: {
+						actionField: {
+							step: this.step
+						}
 					}
 				});
 			}
@@ -1205,13 +1216,26 @@ module.exports = function (ngModule) {
 				options.filter(function (option) {
 					return Boolean(option);
 				}).forEach(function (option) {
-					_this3.geeService.triggerCheckoutOption({ step: step, option: option });
+					_this3.geeService.triggerCheckoutOption({
+						misc: {
+							step: step,
+							option: option
+						}
+					});
 				});
 			}
 		}, {
 			key: 'getDiff',
 			value: function getDiff(newObj, oldObj) {
 				var _this4 = this;
+
+				if (!newObj) {
+					return {};
+				}
+
+				if (!oldObj) {
+					return angular.copy(newObj);
+				}
 
 				return Object.keys(newObj).reduce(function (diff, key) {
 					if (oldObj[key] === newObj[key] || key === '$$hashKey') {
@@ -1365,10 +1389,18 @@ module.exports = [__webpack_require__(62), __webpack_require__(63), __webpack_re
 module.exports = {
 	endpoint: '/products',
 	event: 'productImpression',
-	preprocess: function preprocess(response) {
+	preprocess: function preprocess(response, request, interceptor, config) {
+		if (!response.products || response.products.length === 0 || /(frequently|recently)purchase/.test((config.params || {}).expand || '')) {
+			return false;
+		}
+
 		return {
-			products: response.products,
-			list: response.originalQuery ? 'Search Results' : 'List Page'
+			main: response.products,
+			misc: {},
+			common: {
+				pagination: response.pagination,
+				list: response.originalQuery ? 'Search Results' : 'List Page'
+			}
 		};
 	}
 };
@@ -1385,8 +1417,11 @@ module.exports = {
 	event: 'productDetail',
 	preprocess: function preprocess(response) {
 		return {
-			product: response,
-			list: 'Detail Page'
+			main: response.product,
+			misc: {},
+			common: {
+				list: 'Detail Page'
+			}
 		};
 	}
 };
@@ -1399,9 +1434,16 @@ module.exports = {
 	endpoint: '/websites/current/crosssells',
 	event: 'productImpression',
 	preprocess: function preprocess(response) {
+		if (!response.products || response.products.length === 0) {
+			return false;
+		}
+
 		return {
-			products: response.products,
-			list: 'Web Cross Sale'
+			main: response.products,
+			misc: {},
+			common: {
+				list: 'Web Cross Sale'
+			}
 		};
 	}
 };
@@ -1422,7 +1464,15 @@ module.exports = {
 			});
 		});
 
-		return { products: products };
+		if (products.length === 0) {
+			return false;
+		}
+
+		return {
+			main: products,
+			misc: {},
+			common: {}
+		};
 	}
 };
 
@@ -1437,8 +1487,14 @@ module.exports = {
 	endpoint: '/wishlists/' + regexHelper.guidRegExp,
 	event: 'productImpression',
 	preprocess: function preprocess(response) {
+		if (!response.wishListLineCollection || response.wishListLineCollection.length === 0) {
+			return false;
+		}
+
 		return {
-			products: response.wishListLineCollection
+			main: response.wishListLineCollection,
+			misc: {},
+			common: {}
 		};
 	}
 };
@@ -1471,11 +1527,13 @@ module.exports = {
 	method: urlHelper.methods.post,
 	preprocess: function preprocess(response, request) {
 		return {
-			products: (response.cartLines || [angular.copy(response)]).map(function (product) {
+			main: (response.cartLines || [angular.copy(response)]).map(function (product) {
 				product.qtyAdded = request.qtyOrdered || product.qtyOrdered;
 
 				return product;
-			})
+			}),
+			misc: {},
+			common: {}
 		};
 	}
 };
@@ -1492,12 +1550,14 @@ module.exports = {
 	event: 'removeFromCart',
 	method: urlHelper.methods.patch,
 	preprocess: function preprocess(response, request) {
-		if (response.status !== 'Saved') {
+		if (response.status !== 'Saved' || !request.cartLines || request.cartLines.length === 0) {
 			return false;
 		}
 
 		return {
-			products: request.cartLines
+			main: request.cartLines,
+			misc: {},
+			common: {}
 		};
 	}
 };
@@ -1514,21 +1574,25 @@ module.exports = {
 	event: 'purchase',
 	method: urlHelper.methods.patch,
 	preprocess: function preprocess(response, request) {
-		if (response.status !== 'Processing') {
+		if (['Processing', 'Submitted'].indexOf(response.status) === -1 || !request.cartLines || request.cartLines.length === 0) {
 			return false;
 		}
 
 		return {
-			products: request.cartLines,
-			list: 'Cart',
-			purchase: {
-				actionField: {
-					id: response.erpOrderNumber,
-					affiliation: 'Online Store',
-					revenue: response.orderGrandTotal.toFixed(2),
-					tax: response.totalTax.toFixed(2),
-					shipping: response.shippingAndHandling.toFixed(2)
+			main: request.cartLines,
+			misc: {
+				purchase: {
+					actionField: {
+						id: response.erpOrderNumber || response.orderNumber || response.id,
+						affiliation: 'Online Store',
+						revenue: response.orderSubTotal.toFixed(2),
+						tax: response.totalTax.toFixed(2),
+						shipping: response.shippingAndHandling.toFixed(2)
+					}
 				}
+			},
+			common: {
+				list: 'Cart'
 			}
 		};
 	}

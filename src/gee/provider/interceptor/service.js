@@ -37,12 +37,12 @@ module.exports = class InterceptorService {
 
 	triggerAction(res, { event, preprocess, process, postprocess }) {
 		if (typeof preprocess === 'function') {
-			const preprocessedValue = preprocess(res.data, res.config.data, this);
+			const preprocessedValue = preprocess(res.data, res.config.data, this, angular.copy(res.config));
 			if (preprocessedValue === false) {
 				return;
 			}
 
-			res.data = typeof preprocessedValue === 'object' && preprocessedValue ? preprocessedValue : res.data;
+			res.data = preprocessedValue;
 		}
 
 		if (typeof process === 'function') {

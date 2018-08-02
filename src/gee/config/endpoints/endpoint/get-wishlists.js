@@ -10,6 +10,14 @@ module.exports = {
 			});
 		});
 
-		return { products };
+		if (products.length === 0) {
+			return false;
+		}
+
+		return {
+			main: products,
+			misc: {},
+			common: {}
+		};
 	}
 };

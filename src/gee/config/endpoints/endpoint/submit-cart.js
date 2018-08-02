@@ -5,21 +5,25 @@ module.exports = {
 	event: 'purchase',
 	method: urlHelper.methods.patch,
 	preprocess: (response, request) => {
-		if (response.status !== 'Processing') {
+		if (['Processing', 'Submitted'].indexOf(response.status) === -1 || !request.cartLines || request.cartLines.length === 0) {
 			return false;
 		}
 
 		return {
-			products: request.cartLines,
-			list: 'Cart',
-			purchase: {
-				actionField: {
-					id: response.erpOrderNumber,
-					affiliation: 'Online Store',
-					revenue: response.orderGrandTotal.toFixed(2),
-					tax: response.totalTax.toFixed(2),
-					shipping: response.shippingAndHandling.toFixed(2)
+			main: request.cartLines,
+			misc: {
+				purchase: {
+					actionField: {
+						id: response.erpOrderNumber || response.orderNumber || response.id,
+						affiliation: 'Online Store',
+						revenue: response.orderSubTotal.toFixed(2),
+						tax: response.totalTax.toFixed(2),
+						shipping: response.shippingAndHandling.toFixed(2)
+					}
 				}
+			},
+			common: {
+				list: 'Cart'
 			}
 		};
 	}

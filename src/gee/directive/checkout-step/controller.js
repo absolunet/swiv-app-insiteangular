@@ -71,9 +71,11 @@ module.exports = (ngModule) => {
 
 		pageResolved(cart) {
 			this.geeService.triggerCheckout({
-				products: cart.cartLines,
-				actionField: {
-					step: this.step
+				main: cart.cartLines,
+				misc: {
+					actionField: {
+						step: this.step
+					}
 				}
 			});
 		}
@@ -97,11 +99,24 @@ module.exports = (ngModule) => {
 					return Boolean(option);
 				})
 				.forEach((option) => {
-					this.geeService.triggerCheckoutOption({ step, option });
+					this.geeService.triggerCheckoutOption({
+						misc: {
+							step,
+							option
+						}
+					});
 				});
 		}
 
 		getDiff(newObj, oldObj) {
+			if (!newObj) {
+				return {};
+			}
+
+			if (!oldObj) {
+				return angular.copy(newObj);
+			}
+
 			return Object.keys(newObj).reduce((diff, key) => {
 				if (oldObj[key] === newObj[key] || key === '$$hashKey') {
 					return diff;

@@ -6,11 +6,13 @@ module.exports = {
 	method: urlHelper.methods.post,
 	preprocess: (response, request) => {
 		return {
-			products: (response.cartLines || [angular.copy(response)]).map((product) => {
+			main: (response.cartLines || [angular.copy(response)]).map((product) => {
 				product.qtyAdded = request.qtyOrdered || product.qtyOrdered;
 
 				return product;
-			})
+			}),
+			misc: {},
+			common: {}
 		};
 	}
 };

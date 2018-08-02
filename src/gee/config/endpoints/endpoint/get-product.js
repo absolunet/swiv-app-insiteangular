@@ -5,8 +5,11 @@ module.exports = {
 	event: 'productDetail',
 	preprocess: (response) => {
 		return {
-			product: response,
-			list: 'Detail Page'
+			main: response.product,
+			misc: {},
+			common: {
+				list: 'Detail Page'
+			}
 		};
 	}
 };
