@@ -100,7 +100,7 @@ module.exports = (ngModule) => {
 				})
 				.forEach((option) => {
 					this.geeService.triggerCheckoutOption({
-						misc: {
+						main: {
 							step,
 							option
 						}

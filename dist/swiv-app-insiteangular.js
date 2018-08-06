@@ -1217,7 +1217,7 @@ module.exports = function (ngModule) {
 					return Boolean(option);
 				}).forEach(function (option) {
 					_this3.geeService.triggerCheckoutOption({
-						misc: {
+						main: {
 							step: step,
 							option: option
 						}
