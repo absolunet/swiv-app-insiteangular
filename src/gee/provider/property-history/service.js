@@ -42,6 +42,10 @@ module.exports = class PropertyHistoryService {
 	}
 
 	getInstanceHistory(instance) {
+		if (!instance) {
+			return {};
+		}
+
 		if (!instanceHistories.has(instance)) {
 			const { id } = instance;
 			if (!guidHistories[id]) {

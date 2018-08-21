@@ -14,7 +14,7 @@ module.exports = {
 			misc: {
 				purchase: {
 					actionField: {
-						id: response.erpOrderNumber || response.orderNumber || response.id,
+						id: response ? response.erpOrderNumber || response.orderNumber || response.id : null,
 						affiliation: 'Online Store',
 						revenue: response.orderSubTotal.toFixed(2),
 						tax: response.totalTax.toFixed(2),

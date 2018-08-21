@@ -205,7 +205,7 @@ module.exports = prefix + 'ProductClick';
 
 module.exports = function ($ctrls) {
 	return $ctrls.filter(function ($ctrl) {
-		return $ctrl.$scope && $ctrl.$scope.product;
+		return $ctrl && $ctrl.$scope && $ctrl.$scope.product;
 	}).map(function ($ctrl) {
 		return $ctrl.$scope.product;
 	})[0] || null;
@@ -808,6 +808,10 @@ module.exports = function () {
 	}, {
 		key: "getInstanceHistory",
 		value: function getInstanceHistory(instance) {
+			if (!instance) {
+				return {};
+			}
+
 			if (!instanceHistories.has(instance)) {
 				var id = instance.id;
 
@@ -1583,7 +1587,7 @@ module.exports = {
 			misc: {
 				purchase: {
 					actionField: {
-						id: response.erpOrderNumber || response.orderNumber || response.id,
+						id: response ? response.erpOrderNumber || response.orderNumber || response.id : null,
 						affiliation: 'Online Store',
 						revenue: response.orderSubTotal.toFixed(2),
 						tax: response.totalTax.toFixed(2),
