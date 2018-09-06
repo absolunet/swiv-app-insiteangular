@@ -1191,8 +1191,10 @@ module.exports = function (ngModule) {
 				this.geeService.triggerCheckout({
 					main: cart.cartLines,
 					misc: {
-						actionField: {
-							step: this.step
+						checkout: {
+							actionField: {
+								step: this.step
+							}
 						}
 					}
 				});
