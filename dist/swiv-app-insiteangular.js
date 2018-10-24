@@ -657,6 +657,10 @@ module.exports = function () {
 			    process = _ref.process,
 			    postprocess = _ref.postprocess;
 
+			if (res.config && res.config.noGeeTracking) {
+				return;
+			}
+
 			if (typeof preprocess === 'function') {
 				var preprocessedValue = preprocess(res.data, res.config.data, this, angular.copy(res.config));
 				if (preprocessedValue === false) {
