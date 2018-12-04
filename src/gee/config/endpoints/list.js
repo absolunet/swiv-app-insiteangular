@@ -8,5 +8,6 @@ module.exports = [
 	require('./endpoint/add-to-cart'),
 	require('./endpoint/save-cart'),
 	require('./endpoint/submit-cart'),
-	require('./endpoint/change-qty-ordered')
+	require('./endpoint/change-qty-ordered'),
+	require('./endpoint/realtimepricing')
 ];
