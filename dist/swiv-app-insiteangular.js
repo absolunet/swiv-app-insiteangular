@@ -1742,7 +1742,6 @@ var cartRepository = __webpack_require__(15);
 
 module.exports = {
 	endpoint: '/carts/current',
-	event: 'purchase',
 	method: urlHelper.methods.patch,
 	preprocess: function preprocess(response, request) {
 		if (['Processing', 'Submitted'].indexOf(response.status) === -1 || !request.cartLines || request.cartLines.length === 0) {
@@ -1751,23 +1750,7 @@ module.exports = {
 
 		cartRepository.setCart(response);
 
-		return {
-			main: request.cartLines,
-			misc: {
-				purchase: {
-					actionField: {
-						id: response ? response.erpOrderNumber || response.orderNumber || response.id : null,
-						affiliation: 'Online Store',
-						revenue: response.orderSubTotal.toFixed(2),
-						tax: response.totalTax.toFixed(2),
-						shipping: response.shippingAndHandling.toFixed(2)
-					}
-				}
-			},
-			common: {
-				list: 'Cart'
-			}
-		};
+		return false;
 	}
 };
 
@@ -1869,7 +1852,7 @@ var cartRepository = __webpack_require__(15);
 
 module.exports = {
 	endpoint: '/carts/' + regexHelper.guidRegExp + '/promotions',
-	event: 'promoClick',
+	event: 'purchase',
 	method: urlHelper.methods.get,
 	preprocess: function preprocess(response) {
 
@@ -1889,10 +1872,29 @@ module.exports = {
 
 		cartRepository.unsetCart();
 
+		var promoCodes = response.promotions ? response.promotions.filter(function (promotion) {
+			return promotion.promotionCode;
+		}).map(function (promotion) {
+			return promotion.promotionCode;
+		}).join('|') : null;
+
 		return {
-			main: response.promotions,
-			misc: {},
-			common: {}
+			main: cart.cartLines,
+			misc: {
+				purchase: {
+					actionField: {
+						id: cart ? cart.erpOrderNumber || cart.orderNumber || cart.id : null,
+						affiliation: 'Online Store',
+						revenue: cart.orderSubTotal.toFixed(2),
+						tax: cart.totalTax.toFixed(2),
+						shipping: cart.shippingAndHandling.toFixed(2),
+						coupon: promoCodes
+					}
+				}
+			},
+			common: {
+				list: 'Cart'
+			}
 		};
 	}
 };
