@@ -1485,7 +1485,7 @@ module.exports = function (ngModule) {
 /* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = [__webpack_require__(64), __webpack_require__(65), __webpack_require__(66), __webpack_require__(67), __webpack_require__(68), __webpack_require__(69), __webpack_require__(70), __webpack_require__(71), __webpack_require__(76), __webpack_require__(72), __webpack_require__(73), __webpack_require__(74), __webpack_require__(75)];
+module.exports = [__webpack_require__(64), __webpack_require__(65), __webpack_require__(66), __webpack_require__(67), __webpack_require__(68), __webpack_require__(69), __webpack_require__(70), __webpack_require__(71), __webpack_require__(72), __webpack_require__(73), __webpack_require__(74), __webpack_require__(75), __webpack_require__(76)];
 
 /***/ }),
 /* 64 */
@@ -1738,6 +1738,25 @@ module.exports = {
 var _require = __webpack_require__(0),
     urlHelper = _require.url;
 
+var cartRepository = __webpack_require__(15);
+
+module.exports = {
+	endpoint: '/carts/current',
+	method: urlHelper.methods.get,
+	process: function process(response) {
+		if (response.cartLines.length > 0) {
+			cartRepository.setCart(response);
+		}
+	}
+};
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(0),
+    urlHelper = _require.url;
+
 module.exports = {
 	endpoint: '/carts/current',
 	method: urlHelper.methods.patch,
@@ -1751,7 +1770,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1785,7 +1804,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1835,7 +1854,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1850,10 +1869,8 @@ module.exports = {
 	method: urlHelper.methods.get,
 	preprocess: function preprocess(response) {
 
-		// const [, currentCartId] = (new RegExp(`/carts/(${regexHelper.guidRegExp})/promotions/${regexHelper.guidRegExp}$`)).exec((response.promotions[0] || {}).uri) || [];
 		var cart = cartRepository.getCart();
 
-		// if (currentCartId && (!cart || cart.id !== currentCartId)) {
 		if (!cart) {
 			return false;
 		}
@@ -1889,25 +1906,6 @@ module.exports = {
 				list: 'Cart'
 			}
 		};
-	}
-};
-
-/***/ }),
-/* 76 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _require = __webpack_require__(0),
-    urlHelper = _require.url;
-
-var cartRepository = __webpack_require__(15);
-
-module.exports = {
-	endpoint: '/carts/current',
-	method: urlHelper.methods.get,
-	process: function process(response) {
-		if (response.cartLines.length > 0) {
-			cartRepository.setCart(response);
-		}
 	}
 };
 

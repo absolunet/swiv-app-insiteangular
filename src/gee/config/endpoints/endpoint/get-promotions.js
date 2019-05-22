@@ -7,10 +7,8 @@ module.exports = {
 	method: urlHelper.methods.get,
 	preprocess: (response) => {
 
-		// const [, currentCartId] = (new RegExp(`/carts/(${regexHelper.guidRegExp})/promotions/${regexHelper.guidRegExp}$`)).exec((response.promotions[0] || {}).uri) || [];
 		const cart = cartRepository.getCart();
 
-		// if (currentCartId && (!cart || cart.id !== currentCartId)) {
 		if (!cart) {
 			return false;
 		}
