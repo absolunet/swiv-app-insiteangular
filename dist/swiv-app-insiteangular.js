@@ -1485,7 +1485,7 @@ module.exports = function (ngModule) {
 /* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = [__webpack_require__(64), __webpack_require__(65), __webpack_require__(66), __webpack_require__(67), __webpack_require__(68), __webpack_require__(69), __webpack_require__(70), __webpack_require__(71), __webpack_require__(72), __webpack_require__(73), __webpack_require__(74), __webpack_require__(75)];
+module.exports = [__webpack_require__(64), __webpack_require__(65), __webpack_require__(66), __webpack_require__(67), __webpack_require__(68), __webpack_require__(69), __webpack_require__(70), __webpack_require__(71), __webpack_require__(76), __webpack_require__(72), __webpack_require__(73), __webpack_require__(74), __webpack_require__(75)];
 
 /***/ }),
 /* 64 */
@@ -1738,8 +1738,6 @@ module.exports = {
 var _require = __webpack_require__(0),
     urlHelper = _require.url;
 
-var cartRepository = __webpack_require__(15);
-
 module.exports = {
 	endpoint: '/carts/current',
 	method: urlHelper.methods.patch,
@@ -1747,8 +1745,6 @@ module.exports = {
 		if (['Processing', 'Submitted'].indexOf(response.status) === -1 || !request.cartLines || request.cartLines.length === 0) {
 			return false;
 		}
-
-		cartRepository.setCart(response);
 
 		return false;
 	}
@@ -1842,8 +1838,6 @@ module.exports = {
 /* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _require = __webpack_require__(0),
     regexHelper = _require.regex,
     urlHelper = _require.url;
@@ -1856,46 +1850,64 @@ module.exports = {
 	method: urlHelper.methods.get,
 	preprocess: function preprocess(response) {
 
-		if (!response.promotions || response.promotions.length <= 0) {
+		// const [, currentCartId] = (new RegExp(`/carts/(${regexHelper.guidRegExp})/promotions/${regexHelper.guidRegExp}$`)).exec((response.promotions[0] || {}).uri) || [];
+		var cart = cartRepository.getCart();
+
+		// if (currentCartId && (!cart || cart.id !== currentCartId)) {
+		if (!cart) {
 			return false;
 		}
 
-		var _exec = new RegExp('/carts/(' + regexHelper.guidRegExp + ')/promotions/' + regexHelper.guidRegExp + '$').exec(response.promotions[0].uri),
-		    _exec2 = _slicedToArray(_exec, 2),
-		    currentCartId = _exec2[1];
+		var misc = {
+			purchase: {
+				actionField: {
+					id: cart ? cart.erpOrderNumber || cart.orderNumber || cart.id : null,
+					affiliation: 'Online Store',
+					revenue: cart.orderSubTotal.toFixed(2),
+					tax: cart.totalTax.toFixed(2),
+					shipping: cart.shippingAndHandling.toFixed(2)
+				}
+			}
+		};
 
-		var cart = cartRepository.getCart();
+		if (response.promotions && response.promotions.length > 0) {
+			var promoCodes = response.promotions ? response.promotions.filter(function (promotion) {
+				return promotion.promotionCode;
+			}).map(function (promotion) {
+				return promotion.promotionCode;
+			}).join('|') : null;
 
-		if (!cart || cart.id !== currentCartId) {
-			return false;
+			misc.purchase.actionField.coupon = promoCodes;
 		}
 
 		cartRepository.unsetCart();
 
-		var promoCodes = response.promotions ? response.promotions.filter(function (promotion) {
-			return promotion.promotionCode;
-		}).map(function (promotion) {
-			return promotion.promotionCode;
-		}).join('|') : null;
-
 		return {
 			main: cart.cartLines,
-			misc: {
-				purchase: {
-					actionField: {
-						id: cart ? cart.erpOrderNumber || cart.orderNumber || cart.id : null,
-						affiliation: 'Online Store',
-						revenue: cart.orderSubTotal.toFixed(2),
-						tax: cart.totalTax.toFixed(2),
-						shipping: cart.shippingAndHandling.toFixed(2),
-						coupon: promoCodes
-					}
-				}
-			},
+			misc: misc,
 			common: {
 				list: 'Cart'
 			}
 		};
+	}
+};
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(0),
+    urlHelper = _require.url;
+
+var cartRepository = __webpack_require__(15);
+
+module.exports = {
+	endpoint: '/carts/current',
+	method: urlHelper.methods.get,
+	process: function process(response) {
+		if (response.cartLines.length > 0) {
+			cartRepository.setCart(response);
+		}
 	}
 };
 

@@ -7,6 +7,7 @@ module.exports = [
 	require('./endpoint/current-session'),
 	require('./endpoint/add-to-cart'),
 	require('./endpoint/save-cart'),
+	require('./endpoint/get-cart'),
 	require('./endpoint/submit-cart'),
 	require('./endpoint/change-qty-ordered'),
 	require('./endpoint/realtimepricing'),
