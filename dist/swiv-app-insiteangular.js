@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -68,10 +68,10 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
-	name: __webpack_require__(28),
-	url: __webpack_require__(29),
-	regex: __webpack_require__(30),
-	string: __webpack_require__(31)
+	name: __webpack_require__(29),
+	url: __webpack_require__(30),
+	regex: __webpack_require__(31),
+	string: __webpack_require__(32)
 };
 
 /***/ }),
@@ -286,14 +286,58 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var PromotionRepository = function () {
+	function PromotionRepository() {
+		_classCallCheck(this, PromotionRepository);
+	}
+
+	_createClass(PromotionRepository, [{
+		key: 'setPromoCode',
+		value: function setPromoCode(promoCode) {
+			localStorage.setItem(this.localStorageKey, JSON.stringify(promoCode));
+
+			return this;
+		}
+	}, {
+		key: 'unsetPromoCode',
+		value: function unsetPromoCode() {
+			localStorage.removeItem(this.localStorageKey);
+
+			return this;
+		}
+	}, {
+		key: 'getPromoCode',
+		value: function getPromoCode() {
+			return JSON.parse(localStorage.getItem(this.localStorageKey));
+		}
+	}, {
+		key: 'localStorageKey',
+		get: function get() {
+			return 'SWIV-GEE-CurrentPromoCode';
+		}
+	}]);
+
+	return PromotionRepository;
+}();
+
+module.exports = new PromotionRepository();
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var CartRepository = function () {
 	function CartRepository() {
 		_classCallCheck(this, CartRepository);
 	}
 
 	_createClass(CartRepository, [{
-		key: 'setCart',
-		value: function setCart(cart) {
+		key: 'setSubmittedCart',
+		value: function setSubmittedCart(cart) {
 			localStorage.setItem(this.localStorageKey, JSON.stringify(cart));
 
 			return this;
@@ -306,8 +350,8 @@ var CartRepository = function () {
 			return this;
 		}
 	}, {
-		key: 'getCart',
-		value: function getCart() {
+		key: 'getSubmmittedCart',
+		value: function getSubmmittedCart() {
 			return JSON.parse(localStorage.getItem(this.localStorageKey));
 		}
 	}, {
@@ -323,89 +367,89 @@ var CartRepository = function () {
 module.exports = new CartRepository();
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(17);
-
-
-/***/ }),
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(18);
 
+
 /***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = window.angular ? window.angular.module(__webpack_require__(8), __webpack_require__(19)) : null;
+module.exports = __webpack_require__(19);
 
 /***/ }),
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = [__webpack_require__(20).name];
+module.exports = window.angular ? window.angular.module(__webpack_require__(8), __webpack_require__(20)) : null;
 
 /***/ }),
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ngModule = __webpack_require__(21);
-
-__webpack_require__(24)(ngModule);
-__webpack_require__(40)(ngModule);
-__webpack_require__(60)(ngModule);
-
-module.exports = ngModule;
+module.exports = [__webpack_require__(21).name];
 
 /***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = window.angular ? window.angular.module(__webpack_require__(22), __webpack_require__(23)) : null;
+var ngModule = __webpack_require__(22);
+
+__webpack_require__(25)(ngModule);
+__webpack_require__(41)(ngModule);
+__webpack_require__(61)(ngModule);
+
+module.exports = ngModule;
 
 /***/ }),
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(8) + '.core';
+module.exports = window.angular ? window.angular.module(__webpack_require__(23), __webpack_require__(24)) : null;
 
 /***/ }),
 /* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(8) + '.core';
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = [];
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = function (ngModule) {
-	__webpack_require__(25)(ngModule);
-	__webpack_require__(32)(ngModule);
-	__webpack_require__(36)(ngModule);
-};
-
-/***/ }),
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var GeeProvider = __webpack_require__(26);
-
 module.exports = function (ngModule) {
-	ngModule.provider(__webpack_require__(1), GeeProvider);
+	__webpack_require__(26)(ngModule);
+	__webpack_require__(33)(ngModule);
+	__webpack_require__(37)(ngModule);
 };
 
 /***/ }),
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var GeeProvider = __webpack_require__(27);
+
+module.exports = function (ngModule) {
+	ngModule.provider(__webpack_require__(1), GeeProvider);
+};
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GeeFactory = __webpack_require__(27);
+var GeeFactory = __webpack_require__(28);
 
 var GeeProvider = function () {
 	function GeeProvider() {
@@ -427,7 +471,7 @@ GeeProvider.$inject = [];
 module.exports = GeeProvider;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 var GeeFactory = function GeeFactory() {
@@ -439,7 +483,7 @@ GeeFactory.$inject = [];
 module.exports = GeeFactory;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -475,7 +519,7 @@ var NameHelper = function () {
 module.exports = new NameHelper();
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -519,7 +563,7 @@ var UrlHelper = function () {
 module.exports = new UrlHelper();
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -544,7 +588,7 @@ var RegexHelper = function () {
 module.exports = new RegexHelper();
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -592,15 +636,15 @@ var StringHelper = function () {
 module.exports = new StringHelper();
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (ngModule) {
-	ngModule.provider(__webpack_require__(7), __webpack_require__(33));
+	ngModule.provider(__webpack_require__(7), __webpack_require__(34));
 };
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -619,7 +663,7 @@ var _require = __webpack_require__(0),
 var _require2 = __webpack_require__(4),
     Injectable = _require2.Injectable;
 
-var InterceptorFactory = __webpack_require__(34);
+var InterceptorFactory = __webpack_require__(35);
 
 module.exports = function (_Injectable) {
 	_inherits(InterceptorProvider, _Injectable);
@@ -675,10 +719,10 @@ module.exports = function (_Injectable) {
 }(Injectable);
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var InterceptorService = __webpack_require__(35);
+var InterceptorService = __webpack_require__(36);
 
 var InterceptorFactory = function InterceptorFactory() {
 	for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
@@ -693,7 +737,7 @@ InterceptorFactory.$inject = [__webpack_require__(1), __webpack_require__(5)];
 module.exports = InterceptorFactory;
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -781,15 +825,15 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (ngModule) {
-	ngModule.provider(__webpack_require__(5), __webpack_require__(37));
+	ngModule.provider(__webpack_require__(5), __webpack_require__(38));
 };
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -803,7 +847,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var _require = __webpack_require__(4),
     Injectable = _require.Injectable;
 
-var PropertyHistoryFactory = __webpack_require__(38);
+var PropertyHistoryFactory = __webpack_require__(39);
 
 module.exports = function (_Injectable) {
 	_inherits(PropertyHistoryProvider, _Injectable);
@@ -825,10 +869,10 @@ module.exports = function (_Injectable) {
 }(Injectable);
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var PropertyHistoryService = __webpack_require__(39);
+var PropertyHistoryService = __webpack_require__(40);
 
 var PropertyHistoryFactory = function PropertyHistoryFactory() {
 	for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
@@ -843,7 +887,7 @@ PropertyHistoryFactory.$inject = [];
 module.exports = PropertyHistoryFactory;
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -928,30 +972,30 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = function (ngModule) {
-	__webpack_require__(41)(ngModule);
-	__webpack_require__(45)(ngModule);
-	__webpack_require__(47)(ngModule);
-	__webpack_require__(51)(ngModule);
-	__webpack_require__(55)(ngModule);
-};
-
-/***/ }),
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = function (ngModule) {
+	__webpack_require__(42)(ngModule);
+	__webpack_require__(46)(ngModule);
+	__webpack_require__(48)(ngModule);
+	__webpack_require__(52)(ngModule);
+	__webpack_require__(56)(ngModule);
+};
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var directiveName = __webpack_require__(2);
-var controllerFactory = __webpack_require__(42);
-var scope = __webpack_require__(43);
+var controllerFactory = __webpack_require__(43);
+var scope = __webpack_require__(44);
 
 module.exports = function (ngModule) {
 	var controller = controllerFactory(ngModule);
 	var restrict = 'A';
 
-	ngModule.directive(directiveName, __webpack_require__(44)(function () {
+	ngModule.directive(directiveName, __webpack_require__(45)(function () {
 		return {
 			restrict: restrict,
 			scope: scope,
@@ -961,7 +1005,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1022,7 +1066,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(2);
@@ -1032,7 +1076,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = function (directiveDefinition) {
@@ -1042,14 +1086,14 @@ module.exports = function (directiveDefinition) {
 };
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(10);
 
 module.exports = function (ngModule) {
 
-	ngModule.directive(directiveName, __webpack_require__(46)(function () {
+	ngModule.directive(directiveName, __webpack_require__(47)(function () {
 		return {
 			restrict: 'A'
 		};
@@ -1057,7 +1101,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = function (directiveDefinition) {
@@ -1067,16 +1111,16 @@ module.exports = function (directiveDefinition) {
 };
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(11);
 var productDirective = __webpack_require__(2);
-var scope = __webpack_require__(48);
-var linkFactory = __webpack_require__(49);
+var scope = __webpack_require__(49);
+var linkFactory = __webpack_require__(50);
 
 module.exports = function (ngModule) {
-	ngModule.directive(directiveName, __webpack_require__(50)(function () {
+	ngModule.directive(directiveName, __webpack_require__(51)(function () {
 		return {
 			restrict: 'A',
 			require: ['^?' + productDirective],
@@ -1087,7 +1131,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(11);
@@ -1097,7 +1141,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1127,7 +1171,7 @@ module.exports = function (geeService) {
 };
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (directiveDefinition) {
@@ -1137,16 +1181,16 @@ module.exports = function (directiveDefinition) {
 };
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(13);
 var productDirective = __webpack_require__(2);
-var scope = __webpack_require__(52);
-var linkFactory = __webpack_require__(53);
+var scope = __webpack_require__(53);
+var linkFactory = __webpack_require__(54);
 
 module.exports = function (ngModule) {
-	ngModule.directive(directiveName, __webpack_require__(54)(function () {
+	ngModule.directive(directiveName, __webpack_require__(55)(function () {
 		return {
 			restrict: 'A',
 			require: ['^?' + productDirective],
@@ -1157,7 +1201,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(13);
@@ -1167,7 +1211,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getProductInControllers = __webpack_require__(12);
@@ -1190,7 +1234,7 @@ module.exports = function (geeService) {
 };
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (directiveDefinition) {
@@ -1200,18 +1244,18 @@ module.exports = function (directiveDefinition) {
 };
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var directiveName = __webpack_require__(14);
-var scope = __webpack_require__(56);
-var controllerFactory = __webpack_require__(57);
+var scope = __webpack_require__(57);
+var controllerFactory = __webpack_require__(58);
 
 module.exports = function (ngModule) {
 	var controller = controllerFactory(ngModule);
 	var restrict = 'A';
 
-	ngModule.directive(directiveName, __webpack_require__(59)(function () {
+	ngModule.directive(directiveName, __webpack_require__(60)(function () {
 		return {
 			restrict: restrict,
 			scope: scope,
@@ -1221,13 +1265,13 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = false;
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -1251,7 +1295,7 @@ var propertyHistoryService = __webpack_require__(5);
 var _require2 = __webpack_require__(0),
     stringHelper = _require2.string;
 
-var resolve = __webpack_require__(58);
+var resolve = __webpack_require__(59);
 var directiveName = __webpack_require__(14);
 
 module.exports = function (ngModule) {
@@ -1420,7 +1464,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1434,7 +1478,7 @@ module.exports = (path, obj = {}) => {
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = function (directiveDefinition) {
@@ -1444,16 +1488,16 @@ module.exports = function (directiveDefinition) {
 };
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function (ngModule) {
-	__webpack_require__(61)(ngModule);
 	__webpack_require__(62)(ngModule);
+	__webpack_require__(63)(ngModule);
 };
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var interceptor = __webpack_require__(7);
@@ -1466,11 +1510,11 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var interceptor = __webpack_require__(7);
-var _actions = __webpack_require__(63);
+var _actions = __webpack_require__(64);
 
 module.exports = function (ngModule) {
 	ngModule.config([interceptor + 'Provider', function ($interceptorProvider) {
@@ -1482,13 +1526,13 @@ module.exports = function (ngModule) {
 };
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = [__webpack_require__(64), __webpack_require__(65), __webpack_require__(66), __webpack_require__(67), __webpack_require__(68), __webpack_require__(69), __webpack_require__(70), __webpack_require__(71), __webpack_require__(72), __webpack_require__(73), __webpack_require__(74), __webpack_require__(75), __webpack_require__(76)];
+module.exports = [__webpack_require__(65), __webpack_require__(66), __webpack_require__(67), __webpack_require__(68), __webpack_require__(69), __webpack_require__(70), __webpack_require__(71), __webpack_require__(72), __webpack_require__(73), __webpack_require__(74), __webpack_require__(75), __webpack_require__(76), __webpack_require__(77)];
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var productContextRepository = __webpack_require__(6);
@@ -1535,7 +1579,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1572,7 +1616,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var productContextRepository = __webpack_require__(6);
@@ -1618,7 +1662,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1646,7 +1690,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1669,7 +1713,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1684,7 +1728,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1708,7 +1752,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1732,45 +1776,86 @@ module.exports = {
 };
 
 /***/ }),
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var _require = __webpack_require__(0),
-    urlHelper = _require.url;
-
-var cartRepository = __webpack_require__(15);
-
-module.exports = {
-	endpoint: '/carts/current',
-	method: urlHelper.methods.get,
-	process: function process(response) {
-		if (response.cartLines.length > 0) {
-			cartRepository.setCart(response);
-		}
-	}
-};
-
-/***/ }),
 /* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
+    regexHelper = _require.regex,
     urlHelper = _require.url;
+
+var promotionRepository = __webpack_require__(15);
+var cartRepository = __webpack_require__(16);
+
+module.exports = {
+	endpoint: '/carts/' + regexHelper.guidRegExp,
+	event: 'purchase',
+	method: urlHelper.methods.get,
+	preprocess: function preprocess(response) {
+		var isInSubmission = cartRepository.getSubmmittedCart() || false;
+
+		var cart = response;
+
+		if (!isInSubmission || ['Processing', 'Submitted'].indexOf(response.status) === -1) {
+			return false;
+		}
+
+		var misc = {
+			purchase: {
+				actionField: {
+					id: response ? response.erpOrderNumber || response.orderNumber || response.id : null,
+					affiliation: response.billTo ? response.billTo.customerName : 'Online Store',
+					revenue: response.orderSubTotal.toFixed(2),
+					tax: response.totalTax.toFixed(2),
+					shipping: response.shippingAndHandling.toFixed(2)
+				}
+			}
+		};
+
+		var promotion = promotionRepository.getPromoCode() || undefined;
+
+		if (promotion) {
+			misc.purchase.actionField.coupon = promotion;
+		}
+
+		cartRepository.unsetCart();
+		promotionRepository.unsetPromoCode();
+
+		return {
+			main: cart.cartLines,
+			misc: misc,
+			common: {
+				list: 'Cart'
+			}
+		};
+	}
+};
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(0),
+    urlHelper = _require.url;
+
+var cartRepository = __webpack_require__(16);
 
 module.exports = {
 	endpoint: '/carts/current',
 	method: urlHelper.methods.patch,
 	preprocess: function preprocess(response, request) {
+
 		if (['Processing', 'Submitted'].indexOf(response.status) === -1 || !request.cartLines || request.cartLines.length === 0) {
 			return false;
 		}
+
+		cartRepository.setSubmittedCart(response);
 
 		return false;
 	}
 };
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -1804,7 +1889,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
@@ -1854,38 +1939,18 @@ module.exports = {
 };
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _require = __webpack_require__(0),
-    regexHelper = _require.regex,
     urlHelper = _require.url;
 
-var cartRepository = __webpack_require__(15);
+var promotionRepository = __webpack_require__(15);
 
 module.exports = {
-	endpoint: '/carts/' + regexHelper.guidRegExp + '/promotions',
-	event: 'purchase',
+	endpoint: '/carts/current/promotions',
 	method: urlHelper.methods.get,
 	preprocess: function preprocess(response) {
-
-		var cart = cartRepository.getCart();
-
-		if (!cart) {
-			return false;
-		}
-
-		var misc = {
-			purchase: {
-				actionField: {
-					id: cart ? cart.erpOrderNumber || cart.orderNumber || cart.id : null,
-					affiliation: 'Online Store',
-					revenue: cart.orderSubTotal.toFixed(2),
-					tax: cart.totalTax.toFixed(2),
-					shipping: cart.shippingAndHandling.toFixed(2)
-				}
-			}
-		};
 
 		if (response.promotions && response.promotions.length > 0) {
 			var promoCodes = response.promotions ? response.promotions.filter(function (promotion) {
@@ -1893,19 +1958,10 @@ module.exports = {
 			}).map(function (promotion) {
 				return promotion.promotionCode;
 			}).join('|') : null;
-
-			misc.purchase.actionField.coupon = promoCodes;
+			promotionRepository.setPromoCode(promoCodes);
 		}
 
-		cartRepository.unsetCart();
-
-		return {
-			main: cart.cartLines,
-			misc: misc,
-			common: {
-				list: 'Cart'
-			}
-		};
+		return false;
 	}
 };
 

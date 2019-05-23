@@ -1,6 +1,6 @@
 class CartRepository {
 
-	setCart(cart) {
+	setSubmittedCart(cart) {
 		localStorage.setItem(this.localStorageKey, JSON.stringify(cart));
 
 		return this;
@@ -12,7 +12,7 @@ class CartRepository {
 		return this;
 	}
 
-	getCart() {
+	getSubmmittedCart() {
 		return JSON.parse(localStorage.getItem(this.localStorageKey));
 	}
 
