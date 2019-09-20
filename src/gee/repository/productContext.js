@@ -3,31 +3,27 @@ const __ = new WeakMap();
 class ProductContextRepository {
 
 	constructor() {
-		this.set({}, {}, []);
+		__.set(this, []);
 	}
 
-	set(event, context, products) {
-		this.unset();
-
-		__.set(this, {
-			event: event,
-			context: context,
-			products: products
-		});
+	all() {
+		return __.get(this).concat([]);
 	}
 
-	unset() {
-		if (__.has(this)) {
-			__.delete(this);
-		}
+	get(key) {
+		return __.get(this)[key];
 	}
 
-	get() {
-		if (__.has(this)) {
-			return __.get(this);
-		}
+	add(event, context, products) {
+		__.get(this).push({ event, context, products });
 
-		return null;
+		return this;
+	}
+
+	remove(key) {
+		__.get(this).splice(key, 1);
+
+		return this;
 	}
 
 }

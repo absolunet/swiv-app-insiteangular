@@ -17,7 +17,7 @@ module.exports = {
 		};
 
 		if (incompleteProducts.length) {
-			productContextRepository.set('productImpression', context, incompleteProducts);
+			productContextRepository.add('productImpression', context, incompleteProducts);
 
 			return false;
 		}
