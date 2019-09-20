@@ -14,7 +14,7 @@ module.exports = {
 		};
 
 		if (response.product.pricing && response.product.pricing.requiresRealTimePrice) {
-			productContextRepository.set('productDetail', context, [response.product]);
+			productContextRepository.add('productDetail', context, [response.product]);
 
 			return false;
 		}

@@ -173,35 +173,32 @@ var ProductContextRepository = function () {
 	function ProductContextRepository() {
 		_classCallCheck(this, ProductContextRepository);
 
-		this.set({}, {}, []);
+		__.set(this, []);
 	}
 
 	_createClass(ProductContextRepository, [{
-		key: "set",
-		value: function set(event, context, products) {
-			this.unset();
-
-			__.set(this, {
-				event: event,
-				context: context,
-				products: products
-			});
-		}
-	}, {
-		key: "unset",
-		value: function unset() {
-			if (__.has(this)) {
-				__.delete(this);
-			}
+		key: "all",
+		value: function all() {
+			return __.get(this).concat([]);
 		}
 	}, {
 		key: "get",
-		value: function get() {
-			if (__.has(this)) {
-				return __.get(this);
-			}
+		value: function get(key) {
+			return __.get(this)[key];
+		}
+	}, {
+		key: "add",
+		value: function add(event, context, products) {
+			__.get(this).push({ event: event, context: context, products: products });
 
-			return null;
+			return this;
+		}
+	}, {
+		key: "remove",
+		value: function remove(key) {
+			__.get(this).splice(key, 1);
+
+			return this;
 		}
 	}]);
 
@@ -1555,7 +1552,7 @@ module.exports = {
 		};
 
 		if (incompleteProducts.length) {
-			productContextRepository.set('productImpression', context, incompleteProducts);
+			productContextRepository.add('productImpression', context, incompleteProducts);
 
 			return false;
 		}
@@ -1600,7 +1597,7 @@ module.exports = {
 		};
 
 		if (response.product.pricing && response.product.pricing.requiresRealTimePrice) {
-			productContextRepository.set('productDetail', context, [response.product]);
+			productContextRepository.add('productDetail', context, [response.product]);
 
 			return false;
 		}
@@ -1638,7 +1635,7 @@ module.exports = {
 		};
 
 		if (incompleteProducts.length) {
-			productContextRepository.set('productImpression', context, incompleteProducts);
+			productContextRepository.add('productImpression', context, incompleteProducts);
 
 			return false;
 		}
@@ -1903,38 +1900,50 @@ module.exports = {
 	process: function process(response, request, _ref) {
 		var geeService = _ref.geeService;
 
-		var productContext = productContextRepository.get();
+		if (!response || !response.realTimePricingResults) {
+			return false;
+		}
 
-		if (productContext && productContext.event && productContext.context && productContext.products && productContext.products.length) {
-
-			if (response && response.realTimePricingResults) {
-				productContext.products.forEach(function (product) {
-					var pricingResults = response.realTimePricingResults.filter(function (pricing) {
-						return pricing.productId === product.id;
-					});
-
-					if (pricingResults.length) {
-						var indexOf = productContext.products.indexOf(product);
-						var pricingIndex = productContext.products.filter(function (p, i) {
-							return p.id === product.id && i < indexOf;
-						}).length;
-						if (pricingIndex >= pricingResults.length) {
-							pricingIndex = pricingResults.length - 1;
-						}
-
-						product.pricing = pricingResults[pricingIndex];
-					}
+		productContextRepository.all().reverse().forEach(function (productContext, key) {
+			var filteredProducts = productContext.products.filter(function (product) {
+				return response.realTimePricingResults.some(function (pricing) {
+					return pricing.productId === product.id;
 				});
+			});
+
+			if (filteredProducts.length === 0) {
+				return;
 			}
 
+			filteredProducts.forEach(function (product) {
+				var pricingResults = response.realTimePricingResults.filter(function (pricing) {
+					return pricing.productId === product.id;
+				});
+
+				if (pricingResults.length) {
+					var indexOf = productContext.products.indexOf(product);
+					var pricingIndex = productContext.products.filter(function (p, i) {
+						return p.id === product.id && i < indexOf;
+					}).length;
+					if (pricingIndex >= pricingResults.length) {
+						pricingIndex = pricingResults.length - 1;
+					}
+
+					product.pricing = pricingResults[pricingIndex];
+				}
+			});
+
 			var data = {
-				main: productContext.products,
+				main: filteredProducts,
 				misc: {},
 				common: productContext.context
 			};
 
 			geeService.trigger(productContext.event, data);
-		}
+			productContextRepository.remove(key);
+		});
+
+		return true;
 	}
 };
 
