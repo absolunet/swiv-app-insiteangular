@@ -8,7 +8,21 @@ module.exports = {
 			return false;
 		}
 
-		const incompleteProducts = response.products.filter((product) => {
+		const detailController = '[data-ng-controller="ProductDetailController as vm"]';
+		const currentCtrl = angular.element(detailController).controller();
+		let filteredResponse;
+
+		if (currentCtrl !== undefined) {
+			const { product } = currentCtrl;
+			filteredResponse = response.products.filter((responseProduct) => {
+
+				return responseProduct.id !== product.id;
+			});
+		} else {
+			filteredResponse = response.products;
+		}
+
+		const incompleteProducts = filteredResponse.filter((product) => {
 			return product.pricing && product.pricing.requiresRealTimePrice;
 		});
 
@@ -23,7 +37,7 @@ module.exports = {
 			return false;
 		}
 
-		const completedProducts = response.products.filter((product) => {
+		const completedProducts = filteredResponse.filter((product) => {
 			return !incompleteProducts.filter((incompleteProduct) => {
 				return incompleteProduct === product;
 			});
