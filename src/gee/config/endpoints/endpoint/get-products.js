@@ -8,15 +8,20 @@ module.exports = {
 			return false;
 		}
 
-		const detailController = '[data-ng-controller="ProductDetailController as vm"]';
-		const currentCtrl = angular.element(detailController).controller();
+		const productDetailControllerSelector = ['data-', 'x-', '']
+			.map((prefix) => {
+				return `[${prefix}ng-controller^="ProductDetailController"]`;
+			})
+			.join(', ');
+
+		const { product:currentProduct = {} } = angular.element(productDetailControllerSelector).controller() || {};
+
 		let filteredResponse;
 
-		if (currentCtrl !== undefined) {
-			const { product } = currentCtrl;
-			filteredResponse = response.products.filter((responseProduct) => {
+		if (productDetailControllerSelector !== undefined) {
 
-				return responseProduct.id !== product.id;
+			filteredResponse = response.products.filter(({ id }) => {
+				return id !== currentProduct.id;
 			});
 		} else {
 			filteredResponse = response.products;
