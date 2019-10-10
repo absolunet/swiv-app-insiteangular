@@ -8,18 +8,24 @@ module.exports = {
 			return false;
 		}
 
-		const productDetailControllerSelector = ['data-', 'x-', '']
-			.map((prefix) => {
-				return `[${prefix}ng-controller^="ProductDetailController"]`;
-			})
-			.join(', ');
+		const getController = (name) => {
+			return angular.element(['data-', 'x-', '']
+				.map((prefix) => {
+					return `[${prefix}ng-controller^="${name}"]`;
+				})
+				.join(', ')).controller();
+		};
 
-		const { product:currentProduct = {} } = angular.element(productDetailControllerSelector).controller() || {};
+		const { category:{ subCategories = [] } = {} } = getController('ProductListController')   || {};
+		const { product:currentProduct }               = getController('ProductDetailController') || {};
+
+		if (subCategories.length !== 0) {
+			return false;
+		}
 
 		let filteredResponse;
 
-		if (productDetailControllerSelector !== undefined) {
-
+		if (currentProduct) {
 			filteredResponse = response.products.filter(({ id }) => {
 				return id !== currentProduct.id;
 			});
@@ -28,6 +34,7 @@ module.exports = {
 		}
 
 		const incompleteProducts = filteredResponse.filter((product) => {
+
 			return product.pricing && product.pricing.requiresRealTimePrice;
 		});
 
@@ -41,6 +48,7 @@ module.exports = {
 
 			return false;
 		}
+
 
 		const completedProducts = filteredResponse.filter((product) => {
 			return !incompleteProducts.filter((incompleteProduct) => {

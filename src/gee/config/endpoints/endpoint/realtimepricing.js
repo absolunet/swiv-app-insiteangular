@@ -8,8 +8,8 @@ module.exports = {
 		if (!response || !response.realTimePricingResults) {
 			return false;
 		}
-
-		productContextRepository.all().reverse().forEach((productContext, key) => {
+		const contexts = productContextRepository.all();
+		contexts.forEach((productContext) => {
 			const filteredProducts = productContext.products.filter((product) => {
 				return response.realTimePricingResults.some((pricing) => {
 					return pricing.productId === product.id;
@@ -45,7 +45,7 @@ module.exports = {
 			};
 
 			geeService.trigger(productContext.event, data);
-			productContextRepository.remove(key);
+			productContextRepository.remove(productContext.key);
 		});
 
 		return true;
