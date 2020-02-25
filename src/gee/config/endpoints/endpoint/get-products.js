@@ -16,8 +16,8 @@ module.exports = {
 				.join(', ')).controller();
 		};
 
-		const { category:{ subCategories = [] } = {} } = getController('ProductListController')   || {};
-		const { product:currentProduct }               = getController('ProductDetailController') || {};
+		const { subCategories = [] }     = (getController('ProductListController')  || {}).category || {};
+		const { product:currentProduct } = getController('ProductDetailController') || {};
 
 		if (subCategories.length !== 0) {
 			return false;
@@ -51,7 +51,7 @@ module.exports = {
 
 
 		const completedProducts = filteredResponse.filter((product) => {
-			return !incompleteProducts.filter((incompleteProduct) => {
+			return !incompleteProducts.some((incompleteProduct) => {
 				return incompleteProduct === product;
 			});
 		});
