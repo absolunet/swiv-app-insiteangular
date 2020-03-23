@@ -173,30 +173,50 @@ var ProductContextRepository = function () {
 	function ProductContextRepository() {
 		_classCallCheck(this, ProductContextRepository);
 
-		__.set(this, []);
+		__.set(this, { contexts: [], index: 0 });
 	}
 
 	_createClass(ProductContextRepository, [{
 		key: "all",
 		value: function all() {
-			return __.get(this).concat([]);
+			return __.get(this).contexts.concat([]);
 		}
 	}, {
 		key: "get",
 		value: function get(key) {
-			return __.get(this)[key];
+			return __.get(this).contexts.find(function (_ref) {
+				var itemKey = _ref.key;
+
+				return itemKey === key;
+			});
 		}
 	}, {
 		key: "add",
 		value: function add(event, context, products) {
-			__.get(this).push({ event: event, context: context, products: products });
+			var _$get = __.get(this),
+			    contexts = _$get.contexts,
+			    key = _$get.index;
+
+			contexts.push({ event: event, context: context, products: products, key: key });
+			__.get(this).index++;
 
 			return this;
 		}
 	}, {
 		key: "remove",
 		value: function remove(key) {
-			__.get(this).splice(key, 1);
+			var _$get2 = __.get(this),
+			    contexts = _$get2.contexts;
+
+			var index = contexts.findIndex(function (_ref2) {
+				var itemKey = _ref2.key;
+
+				return itemKey === key;
+			});
+
+			if (index > -1) {
+				contexts.splice(index, 1);
+			}
 
 			return this;
 		}
@@ -1542,7 +1562,37 @@ module.exports = {
 			return false;
 		}
 
-		var incompleteProducts = response.products.filter(function (product) {
+		var getController = function getController(name) {
+			return angular.element(['data-', 'x-', ''].map(function (prefix) {
+				return '[' + prefix + 'ng-controller^="' + name + '"]';
+			}).join(', ')).controller();
+		};
+
+		var _ref = (getController('ProductListController') || {}).category || {},
+		    _ref$subCategories = _ref.subCategories,
+		    subCategories = _ref$subCategories === undefined ? [] : _ref$subCategories;
+
+		var _ref2 = getController('ProductDetailController') || {},
+		    currentProduct = _ref2.product;
+
+		if (subCategories.length !== 0) {
+			return false;
+		}
+
+		var filteredResponse = void 0;
+
+		if (currentProduct) {
+			filteredResponse = response.products.filter(function (_ref3) {
+				var id = _ref3.id;
+
+				return id !== currentProduct.id;
+			});
+		} else {
+			filteredResponse = response.products;
+		}
+
+		var incompleteProducts = filteredResponse.filter(function (product) {
+
 			return product.pricing && product.pricing.requiresRealTimePrice;
 		});
 
@@ -1557,8 +1607,8 @@ module.exports = {
 			return false;
 		}
 
-		var completedProducts = response.products.filter(function (product) {
-			return !incompleteProducts.filter(function (incompleteProduct) {
+		var completedProducts = filteredResponse.filter(function (product) {
+			return !incompleteProducts.some(function (incompleteProduct) {
 				return incompleteProduct === product;
 			});
 		});
@@ -1903,8 +1953,8 @@ module.exports = {
 		if (!response || !response.realTimePricingResults) {
 			return false;
 		}
-
-		productContextRepository.all().reverse().forEach(function (productContext, key) {
+		var contexts = productContextRepository.all();
+		contexts.forEach(function (productContext) {
 			var filteredProducts = productContext.products.filter(function (product) {
 				return response.realTimePricingResults.some(function (pricing) {
 					return pricing.productId === product.id;
@@ -1940,7 +1990,7 @@ module.exports = {
 			};
 
 			geeService.trigger(productContext.event, data);
-			productContextRepository.remove(key);
+			productContextRepository.remove(productContext.key);
 		});
 
 		return true;
