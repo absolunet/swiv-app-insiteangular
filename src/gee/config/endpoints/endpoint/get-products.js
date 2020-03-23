@@ -8,7 +8,33 @@ module.exports = {
 			return false;
 		}
 
-		const incompleteProducts = response.products.filter((product) => {
+		const getController = (name) => {
+			return angular.element(['data-', 'x-', '']
+				.map((prefix) => {
+					return `[${prefix}ng-controller^="${name}"]`;
+				})
+				.join(', ')).controller();
+		};
+
+		const { subCategories = [] }     = (getController('ProductListController')  || {}).category || {};
+		const { product:currentProduct } = getController('ProductDetailController') || {};
+
+		if (subCategories.length !== 0) {
+			return false;
+		}
+
+		let filteredResponse;
+
+		if (currentProduct) {
+			filteredResponse = response.products.filter(({ id }) => {
+				return id !== currentProduct.id;
+			});
+		} else {
+			filteredResponse = response.products;
+		}
+
+		const incompleteProducts = filteredResponse.filter((product) => {
+
 			return product.pricing && product.pricing.requiresRealTimePrice;
 		});
 
@@ -23,8 +49,9 @@ module.exports = {
 			return false;
 		}
 
-		const completedProducts = response.products.filter((product) => {
-			return !incompleteProducts.filter((incompleteProduct) => {
+
+		const completedProducts = filteredResponse.filter((product) => {
+			return !incompleteProducts.some((incompleteProduct) => {
 				return incompleteProduct === product;
 			});
 		});
